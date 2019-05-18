@@ -7,13 +7,12 @@
 
 <script>
 import TestMD from '../../README.md';
-import showdown from 'showdown';
 
 export default {
   name: 'home',
 
   components: {
-    showdown,
+
   },
 
   data() {
