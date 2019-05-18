@@ -1,13 +1,16 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="footer">
+    <p>Footer Test</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'about',
+  name: 'footer',
 
+  components: {
+
+  },
 }
 </script>
 
