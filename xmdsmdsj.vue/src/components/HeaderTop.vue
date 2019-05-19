@@ -1,13 +1,14 @@
 <template>
-  <div class="header">
+  <div class="headerTop">
     <router-link to="/">Home</router-link> 
+    <router-link to="/article">Articles</router-link>
     <router-link to="/about" class="to-right">About</router-link>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'header',
+  name: 'headertop',
 
   components: {
 
@@ -16,7 +17,7 @@ export default {
 </script>
 
 <style scoped>
-  .header {
+  .headerTop {
     font-size: 24px;
     background-color: rgb(255, 255, 255);
     padding: 1rem 1rem 1rem 0rem;
@@ -33,7 +34,7 @@ export default {
     margin-left: 1.5rem;
   }
 
-  .header .to-right {
+  .headerTop .to-right {
     float: right;
     margin-right: 1.5rem;
   }

@@ -6,6 +6,11 @@ module.exports = {
       .loader('html-loader')
       .end()
       .use('markdown-loader')
-      .loader('markdown-loader')
+      .loader('markdown-loader'),
+    config.module.rule('html')
+      .test(/\.html/)
+      .use('html-loader')
+      .loader('html-loader')
+      .end()
   }
 }

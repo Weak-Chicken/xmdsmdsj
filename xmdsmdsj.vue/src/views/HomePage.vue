@@ -1,6 +1,5 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+  <div class="homePage">
     <div v-html="MDFilePlaceHolder"></div>
   </div>
 </template>
@@ -10,7 +9,7 @@ import TestMD from '../../README.md';
 import axios from 'axios';
 
 export default {
-  name: 'home',
+  name: 'homepage',
 
   components: {
 
