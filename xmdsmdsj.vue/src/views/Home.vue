@@ -7,6 +7,7 @@
 
 <script>
 import TestMD from '../../README.md';
+import axios from 'axios';
 
 export default {
   name: 'home',
