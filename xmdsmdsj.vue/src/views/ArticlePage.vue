@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HtmlMD from '@/temp/data/topics/test html.html';
+import HtmlMD from '@/temp/data/topics/01.html';
 
 export default {
   name: 'articlepage',
