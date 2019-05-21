@@ -16,7 +16,7 @@ export default {
         {
           id: '01',
           html: HtmlMD,
-          title: '01',
+          title: 'Build a post page, set the router properly',
         },
       ]
     }
