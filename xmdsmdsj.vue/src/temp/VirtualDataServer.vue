@@ -6,24 +6,24 @@
 
 <script>
 import HtmlMD from '@/temp/data/topics/01.html';
+import { getAllPosts } from '@/temp/data/topics';
 
 export default {
   name: 'virtualdataserver',
 
   data() {
     return {
-      allPosts: [
-        {
-          id: '01',
-          html: HtmlMD,
-          title: 'Build a post page, set the router properly',
-        },
-      ]
+      allPosts: []
     }
   },
 
   mounted() {
-      this.$emit('get-all-posts', this.allPosts);
+    this.allPosts = getAllPosts();
+    this.$emit('get-all-posts', this.allPosts);
+  },
+
+  componets: {
+    getAllPosts,
   },
 }
 </script>

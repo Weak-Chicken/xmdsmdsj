@@ -16,3 +16,46 @@
 <hr>
 
 <h3>Steps:</h3>
+
+<ol>
+  <h4><li>Try to use nodejs fs module to read files in a folder</li></h4>
+
+  <p>
+    However, it seems that this is not working. "fs" module will throw an error out in Vue. Maybe I can try that later. But since reading
+    files directly from the server rather than database is not a good idea, I think trying to do this is meaningless.
+  </p>
+
+  <h4><li>At least, try to import html files dynamically.</li></h4>
+
+  <p>So I fisrt built a list for setting ids and titles of a html file. Then, try to import the html file based on its id. The code is </p>
+
+  <code>
+      function getAllPosts() {
+        let allPosts = [
+          {
+            id: '01',
+            html: '',
+            title: 'test'
+          },
+      
+          {
+            id: '02',
+            html: '',
+            title: 'test'
+          },
+        ]
+      
+        allPosts.forEach((item, index, arr) => {
+          import('@/temp/data/topics/' + item.id + '.html').then( module => item.html = module.default);
+        });
+      
+        return allPosts;
+      }
+      
+      export { getAllPosts };
+  </code>
+
+  <p>Now its importing dynamically.</p>
+
+  <h4><li>Then, I noticed that the original page cannot be shown here</li></h4>
+</ol>
