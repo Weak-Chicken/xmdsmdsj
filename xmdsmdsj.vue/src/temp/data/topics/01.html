@@ -1,5 +1,146 @@
-<h3>Build a post page, set the router properly</h3>
+<h3>Goal:</h3>
+
+<h4>Build a post page, set the router properly</h4>
 
 <p>In this part, I'll try to build a post page on the front page and set router accordingly.</p>
 
+<br>
+
 <p>So far, no backend is involved.</p>
+
+<br>
+
+<p>Meadwhile, I'll try to combine the post page with article page to one url. i.e. article/ for posts while article/:articleId for articles</p>
+
+<hr>
+
+<h3>Steps:</h3>
+
+<ol>
+  <h4><li>Create a virtual data server</li></h4>
+  <p>
+    Due to our backend server is not ready, we need something to simulate a backend server to provide data to us through an API. Here I chose 
+    to build a Vue file in temp folder to read and serve html data.
+  </p>
+  <code>
+      <template>
+          <div class="virtualDataServer">
+        
+          </div>
+        </template>
+        
+        <script>
+        import HtmlMD from '@/temp/data/topics/01.html';
+        
+        export default {
+          name: 'virtualdataserver',
+        
+          data() {
+            return {
+              allPosts: [
+                {
+                  id: '01',
+                  html: HtmlMD,
+                  title: '',
+                },
+              ]
+            }
+          },
+        
+          mounted() {
+              this.$emit('get-all-posts', this.allPosts);
+          },
+        }
+        </script>
+  </code>
+  <h4><li>Create PostPage view</li></h4>
+  <p>
+    Since we're going to show a list of posts, so now we will need a post page here.
+  </p>
+  <p>
+    This post page should be able to read data from the virtual data server we have just built and show these pages as a list with
+    links.
+  </p>
+  <code>
+      <template>
+          <div class="postPage">
+            <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
+            <div class="onePagePosts" v-for="post in posts" v-bind:key="post.id">
+              <router-link :to="{name: 'articlepage', params:{articleId: post.id, articleHtml: post.html}}">
+                {{post.title}}
+              </router-link>
+            </div>
+          </div>
+        </template>
+        
+        <script>
+        import VirtualDataServer from '@/temp/VirtualDataServer.vue';
+        
+        export default {
+          name: 'postpage',
+        
+          data() {
+            return {
+              posts:[]
+            }
+          },
+        
+          components: {
+            VirtualDataServer,
+          },
+        
+          methods: {
+            getPosts(allPosts) {
+              this.posts = allPosts;
+            }
+          }
+        }
+        </script>    
+  </code>
+  <p>
+    Notice that here I give the html content through router params.
+  </p>
+  <h4><li>Fix bugs</li></h4>
+  <p>
+    After using the upper method, I realized that passing parameters through router is a bad idea. If you run this code you'll notice that
+    once the page is refreshed, the data in router will be lost. Which will cause the page change to blank.
+  </p>
+  <p>
+    Therefore, I decide to let article page to re-obtain the data according to article id.
+  </p>
+  <p>
+    The changed code are given below:
+  </p>
+  <code>
+      <template>
+          <div class="articlePage">
+            <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
+            <div v-html="topicPlaceHolder"></div>
+          </div>
+        </template>
+        
+        <script>
+        import VirtualDataServer from '@/temp/VirtualDataServer.vue';
+        
+        export default {
+          name: 'articlepage',
+        
+          data() {
+            return {
+              topicPlaceHolder: '',
+            }
+          },
+        
+          components: {
+            VirtualDataServer,
+          },
+        
+          methods: {
+            getPosts(allPosts) {
+              this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0].html; 
+            }
+          }
+        }
+        </script>
+  </code>
+</ol>

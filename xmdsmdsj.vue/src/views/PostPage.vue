@@ -1,7 +1,11 @@
 <template>
-  <div class="articlePage">
+  <div class="postPage">
     <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
-    <div v-html="topicPlaceHolder"></div>
+    <div class="onePagePosts" v-for="post in posts" v-bind:key="post.id">
+      <router-link :to="{name: 'articlepage', params:{articleId: post.id, articleHtml: post.html}}">
+        {{post.title}}
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -9,11 +13,11 @@
 import VirtualDataServer from '@/temp/VirtualDataServer.vue';
 
 export default {
-  name: 'articlepage',
+  name: 'postpage',
 
   data() {
     return {
-      topicPlaceHolder: '',
+      posts:[]
     }
   },
 
@@ -23,7 +27,7 @@ export default {
 
   methods: {
     getPosts(allPosts) {
-      this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0].html; 
+      this.posts = allPosts;
     }
   }
 }

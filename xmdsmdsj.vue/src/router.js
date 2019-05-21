@@ -17,6 +17,11 @@ export default new Router({
     },
     {
       path: '/article',
+      name: 'postpage',
+      component: () => import('@/views/PostPage.vue')
+    },
+    {
+      path: '/article/:articleId',
       name: 'articlepage',
       component: () => import('@/views/ArticlePage.vue')
     }
