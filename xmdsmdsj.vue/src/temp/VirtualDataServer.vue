@@ -1,12 +1,11 @@
 <template>
   <div class="virtualDataServer">
-
+    <TopicIndex @get-all-topics="getAllTopics"></TopicIndex>
   </div>
 </template>
 
 <script>
-import HtmlMD from '@/temp/data/topics/01.html';
-import { getAllPosts } from '@/temp/data/topics';
+import TopicIndex from '@/temp/data/topics/TopicIndex.vue';
 
 export default {
   name: 'virtualdataserver',
@@ -17,14 +16,21 @@ export default {
     }
   },
 
-  mounted() {
-    this.allPosts = getAllPosts();
-    this.$emit('get-all-posts', this.allPosts);
+  // mounted() {
+  //   this.allPosts = getAllPosts();
+  //   this.$emit('get-all-posts', this.allPosts);
+  // },
+
+  components: {
+    TopicIndex,
   },
 
-  componets: {
-    getAllPosts,
-  },
+  methods: {
+    getAllTopics(allTopics) {
+      this.allPosts = allTopics;
+      this.$emit('get-all-posts', this.allPosts);
+    }
+  }
 }
 </script>
 

@@ -23,8 +23,7 @@ export default {
 
   methods: {
     getPosts(allPosts) {
-      // this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0].html; 
-      this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0]; 
+      this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0].html;  
     }
   }
 }
