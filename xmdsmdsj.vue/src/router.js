@@ -24,6 +24,11 @@ export default new Router({
       path: '/article/:articleId',
       name: 'articlepage',
       component: () => import('@/views/ArticlePage.vue')
+    },
+    {
+      path: '/upcoming',
+      name: 'upcomingpage',
+      component: () => import('@/views/UpComingPage.vue')
     }
   ]
 })

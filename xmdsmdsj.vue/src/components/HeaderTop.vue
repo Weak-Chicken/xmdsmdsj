@@ -2,6 +2,7 @@
   <div class="headerTop">
     <router-link to="/">Home</router-link> 
     <router-link to="/article">Articles</router-link>
+    <router-link to="/upcoming">Up Coming</router-link>
     <router-link to="/about" class="to-right">About</router-link>
   </div>
 </template>
@@ -31,11 +32,11 @@ export default {
   a {
     text-decoration: none;
     color: black;
-    margin-left: 1.5rem;
+    margin-left: 2.5rem;
   }
 
   .headerTop .to-right {
     float: right;
-    margin-right: 1.5rem;
+    margin-right: 2.5rem;
   }
 </style>
