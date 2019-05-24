@@ -14,11 +14,12 @@ var mysqlPool = mysql.createPool(mysqlConfig.mysql);
 // DO NOT use 'get' here. Use 'post' to secure user's password.
 router.post('/Login', (req, res, next) => {
   // Get connection from connection pool
-  mysqlPool.getConnection((err, connection) => {
-    if (err) throw (err);
+  // mysqlPool.getConnection((err, connection) => {
+  //   if (err) throw (err);
 
-    
-  });
+  //   console.log(req.body);
+  // });
+  res.send(req.body);
 });
 
 module.exports = router;
