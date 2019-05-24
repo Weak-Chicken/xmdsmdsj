@@ -37,3 +37,5 @@ TBD
 4. Once an user suspended its account, only super admin can revert this operation.
 5. It will accept an account deletion operation. Only the user itself can suspend its own account. When accounts are suspended, DO remove them from database.
 6. Allow users to export their data. Including their configs, todos, blogs etc.
+7. Multilingual mode
+8. Night / Dark mode

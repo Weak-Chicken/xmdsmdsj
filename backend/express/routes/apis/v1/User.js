@@ -19,7 +19,56 @@ router.post('/Login', multipartMiddleware, (req, res, next) => {
   mysqlPool.getConnection((err, connection) => {
     if (err) throw (err);
 
-    res.send(req.body);
+    let [
+      uuid,
+      userName,
+      userPwd,
+    ] = [
+        req.body.uuid,
+        req.body.userName,
+        req.body.userPwd,
+      ];
+
+    res.send({
+      'uuid': uuid,
+      'userName': userName,
+      'userPwd': userPwd
+    })
+
+    // connection.query(mysqlUserOp.getUserById, (err, res, result) => {
+    //   var isTrue = false;
+    //   if(res){ //获取用户列表，循环遍历判断当前用户是否存在
+    //       for (var i=0;i<res.length;i++) {
+    //           if(res[i].uid == UserName && res[i].userName == Password) {
+    //               isTrue = true;
+    //           }
+    //       }
+    //   }
+    //   var data = {};
+    //   data.isLogin = isTrue; //如果isTrue布尔值为true则登陆成功 有false则失败
+    //   if(isTrue) {
+    //       data.userInfo = {};
+    //       data.userInfo.uid = UserName;
+    //       data.userInfo.userName = Password;
+    //   } //登录成功返回用户信息
+    //   if(result) {
+    //       result = {
+    //           code: 200,
+    //           msg: 'succeed'
+    //       };
+    //       data.result = result;
+    //   }
+    //   if(err) data.err = err;
+    //   // 以json形式，把操作结果返回给前台页面
+    //   responseJSON(_res, data);
+
+    // // Release the connection
+    // // connection.release(); // might not work!!!
+    // mysqlPool.releaseConnection(connection);
+
+    // });
+
+
   });
 });
 
