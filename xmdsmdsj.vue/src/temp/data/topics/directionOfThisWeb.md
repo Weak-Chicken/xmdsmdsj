@@ -14,21 +14,26 @@ This web should be at lesat can be used as a personal blog. It needs to have the
 
 ### Authentication Part
 1. Log in and out
-2. Can replace my avatar
-3. Secure my password when transmitting
 
 ### Structure Part
-4. Use Vue+Express+MySql+Nginx struct
+2. Use Vue+Express+MySql+Nginx struct
 
 ### Page Part
-5. Four pages are required. Home, About, Blog, Todos.
-6. Home for showing nothing
-7. About for showing these version infomation
-8. Blog for showing a blog list and further provide the infomation of each blog
-9. Todos for showing the upcoming web development plan.
-10. Online editor for blog page
-11. No layout requirement at this stage
+3. Four pages are required. Home, About, Blog, Todos.
+4. Home for showing nothing
+5. About for showing these version infomation
+6. Blog for showing a blog list and further provide the infomation of each blog
+7. Todos for showing the upcoming web development plan.
+8. Online editor for blog page
+9. No layout requirement at this stage
 
 # Vesrion 2
 
 TBD
+
+1. Secure my password when transmitting
+2. Can replace my avatar
+3. It will accept an account suspend operation. Only the user itself can suspend its own account. When accounts are suspended, DO NOT remove them from database.
+4. Once an user suspended its account, only super admin can revert this operation.
+5. It will accept an account deletion operation. Only the user itself can suspend its own account. When accounts are suspended, DO remove them from database.
+6. Allow users to export their data. Including their configs, todos, blogs etc.

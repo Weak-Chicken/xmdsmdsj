@@ -1,9 +1,9 @@
 module.exports = {  
   mysql: {   
-    host: '127.0.0.1',     
+    host: '192.168.240.141',     
     user: 'root',   
     password: 'password',  
-    database:'expressdb', // 前面建的user表位于这个数据库中 
+    database:'expressdb', 
     port: 3306  
   }
  };
