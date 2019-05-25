@@ -7,6 +7,7 @@ var router = express.Router();
 var mysql = require('mysql');
 var mysqlConfig = require('../../../db/sql/sqlConfigs');
 var mysqlUserOp = require('../../../db/sql/userSqlOp');
+var flagCode = require('../../__flags__');
 var multipartMiddleware = multipart();
 
 // Build a connection pool for sql connection
@@ -24,31 +25,73 @@ router.post('/Login', multipartMiddleware, (req, res, next) => {
       userName,
       userPwd,
     ] = [
-        req.body.uuid,
+        parseInt(req.body.uuid),
         req.body.userName,
         req.body.userPwd,
       ];
 
     connection.query(mysqlUserOp.getUserById, [uuid], (error, results, fields) => {
       if (error) throw (error);
+      
+      // res.send({
+      //   'results': results
+      // });
 
-      res.send({
-        'results': results,
-        'fields': fields
-      })
+      // console.log(results);
+      // console.log(results.uuid);
+      // console.log(results[0]);
+      // console.log(results[0].uuid);
+      if (results.length === 0) { // TODO: improve here!
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_USER_NOT_FOUND
+        });
+        return;
+      }
 
+      results = results[0]
+      // console.log([uuid,userName,userPwd]);
+      if ((results.uuid == uuid) && (results.userName == userName) && (results.pwd == userPwd)) {
+        res.send({
+          'success': true,
+          'flag': flagCode.INFO_USER_LOGIN_SUCCEEDED,
+          'userData': results,
+        });
+      } else {
+        if (results.uuid != uuid) {
+          res.send({
+            'success': false,
+            'flag': flagCode.ERROR_USER_UUId_WRONG
+          });
+          // console.log('expected:', results.uuid, typeof(results.uuid))
+          // console.log('received:', uuid, typeof(uuid))
+          return;
+        }
+        if (results.userName != userName) {
+          res.send({
+            'success': false,
+            'flag': flagCode.ERROR_USER_NAME_WRONG
+          });
+          return;
+        }
+        if (results.pwd != userPwd) {
+          res.send({
+            'success': false,
+            'flag': flagCode.ERROR_USER_PASSWORD_WRONG
+          });
+          return;
+        } else {
+          res.send({
+            'success': false,
+            'flag': flagCode.ERROR_USER_PASSWORD_WRONG
+          });
+          return;
+        }
+      }
+      });
     // Release the connection
     // connection.release(); // might not work
     mysqlPool.releaseConnection(connection);
-    });
-
-    // res.send({
-    //   'uuid': uuid,
-    //   'userName': userName,
-    //   'userPwd': userPwd,
-    //   'sql': sqlExample,
-    // })
-
   });
 });
 
