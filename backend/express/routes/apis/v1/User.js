@@ -15,18 +15,19 @@ var mysqlPool = mysql.createPool(mysqlConfig.mysql);
 
 // User login
 // DO NOT use 'get' here. Use 'post' to secure user's password.
-router.post('/Login', multipartMiddleware, (req, res, next) => {
+router.post('/login', multipartMiddleware, (req, res, next) => {
+  if (req.session.logIn) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
+    });
+    return;
+  }
+
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
     if (err) throw (err);
-    if (req.session.logIn) {
-      res.status(400);
-      res.send({
-        'success': false,
-        'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
-      });
-      return;
-    }
 
     let [
       uuid,
@@ -116,7 +117,16 @@ router.post('/Login', multipartMiddleware, (req, res, next) => {
 
 // User register
 // DO NOT use 'get' here. Use 'post' to secure user's password.
-router.post('/Register', multipartMiddleware, (req, res, next) => {
+router.post('/register', multipartMiddleware, (req, res, next) => {
+  if (req.session.logIn) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
+    });
+    return;
+  }
+
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
     if (err) throw (err);
@@ -154,6 +164,163 @@ router.post('/Register', multipartMiddleware, (req, res, next) => {
     // connection.release(); // might not work
     mysqlPool.releaseConnection(connection);
   });
+});
+
+router.post('/getUserById', multipartMiddleware, (req, res, next) => {
+  if (!(req.session.logIn)) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_NOT_LOGGED_IN,
+    });
+    return;
+  }
+
+  let uuid = parseInt(req.body.uuid);
+
+  mysqlPool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err)
+    }
+
+    connection.query(mysqlUserOp.getUserById, [uuid], (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR,
+          'error': error,
+        });
+        return;
+      };
+
+      res.send({
+        'success': true,
+        'userData': results,
+      });
+    });
+  });
+  mysqlPool.releaseConnection(connection);
+});
+
+router.post('/listUsers', multipartMiddleware, (req, res, next) => {
+  if (!(req.session.logIn)) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_NOT_LOGGED_IN,
+    });
+    return;
+  }
+
+  mysqlPool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err)
+    }
+
+    connection.query(mysqlUserOp.queryAllNormal, (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_USER_REGISTER_ERROR,
+          'error': error,
+        });
+        return;
+      };
+
+      res.send({
+        'success': true,
+        'userData': results,
+      });
+    });
+  });
+  mysqlPool.releaseConnection(connection);
+});
+
+router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
+  if (!(req.session.logIn)) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_NOT_LOGGED_IN,
+    });
+    return;
+  }
+
+  mysqlPool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err)
+    }
+
+    let userData;
+    connection.query(mysqlUserOp.getUserById, uuid, (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_USER_REGISTER_ERROR,
+          'error': error,
+        });
+        return;
+      };
+
+      // userData = results
+    });
+
+    connection.query(mysqlUserOp.getUserByIdNormal, uuid, (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_USER_REGISTER_ERROR,
+          'error': error,
+        });
+        return;
+      };
+
+      res.send({
+        'success': true,
+        'userData': results,
+      });
+    });
+  });
+  mysqlPool.releaseConnection(connection);
+});
+
+router.post('/listUsersDetails', multipartMiddleware, (req, res, next) => {
+  if (!(req.session.logIn)) {
+    res.status(400);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_NOT_LOGGED_IN,
+    });
+    return;
+  }
+
+  mysqlPool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err)
+    }
+
+    connection.query(mysqlUserOp.getUserByIdNormal, uuid, (error, results, fields) => {
+      if (error) {
+        console.log(error);
+        res.send({
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_USER_REGISTER_ERROR,
+          'error': error,
+        });
+        return;
+      };
+
+      res.send({
+        'success': true,
+        'userData': results,
+      });
+    });
+  });
+  mysqlPool.releaseConnection(connection);
 });
 
 module.exports = router;
