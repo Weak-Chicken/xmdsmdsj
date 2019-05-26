@@ -19,6 +19,14 @@ router.post('/Login', multipartMiddleware, (req, res, next) => {
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
     if (err) throw (err);
+    if (req.session.logIn) {
+      res.status(400);
+      res.send({
+        'success': false,
+        'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
+      });
+      return;
+    }
 
     let [
       uuid,
@@ -60,6 +68,9 @@ router.post('/Login', multipartMiddleware, (req, res, next) => {
       results = results[0]
       // console.log([uuid,userName,userPwd]);
       if ((results.uuid == uuid) && (results.userName == userName) && (results.userPwd == userPwd)) {
+        req.session.logIn = true;
+        req.session.logInUser = results.uuid;
+
         res.send({
           'success': true,
           'flag': flagCode.INFO_USER_LOGIN_SUCCEEDED,
