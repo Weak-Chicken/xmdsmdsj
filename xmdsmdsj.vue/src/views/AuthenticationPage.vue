@@ -27,10 +27,14 @@
         <div class="loginForgotPassword">
           <p>Forgot password?</p>
         </div>
+        <div class="loginRegister">
+          <p>Don't have an account? <router-link to="/register" class="to-right">Join us</router-link></p>
+        </div>
       </div>
     </div>
     <div v-else-if="currentPage === '/register'">
       <h3>Sorry, We are currently not accepting new members.</h3>
+      <router-link to="/login" class="to-right">Go back</router-link>
     </div>
     <div v-else>
       <h2>Error! URI is not set!</h2>
@@ -52,6 +56,12 @@ export default {
   created() {
     this.currentPage = this.$route.path;
   },
+
+  watch: {
+		'$route.path' (val) {
+      this.currentPage = val;
+		}
+	}
 }
 </script>
 

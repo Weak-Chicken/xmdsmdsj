@@ -35,5 +35,10 @@ export default new Router({
       name: 'authenticationpage',
       component: () => import('@/views/AuthenticationPage.vue')
     },
+    {
+      path: '/register',
+      name: 'authenticationpage',
+      component: () => import('@/views/AuthenticationPage.vue')
+    },
   ]
 })
