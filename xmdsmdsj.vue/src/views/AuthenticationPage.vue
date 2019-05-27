@@ -61,7 +61,11 @@ export default {
 		'$route.path' (val) {
       this.currentPage = val;
 		}
-	}
+  },
+  
+  methods: {
+
+  },
 }
 </script>
 
