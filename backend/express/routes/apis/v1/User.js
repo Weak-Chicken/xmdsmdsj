@@ -183,7 +183,7 @@ router.post('/getUserById', multipartMiddleware, (req, res, next) => {
       console.log(err)
     }
 
-    connection.query(mysqlUserOp.getUserById, [uuid], (error, results, fields) => {
+    connection.query(mysqlUserOp.getUserByIdNormal, [uuid], (error, results, fields) => {
       if (error) {
         console.log(error);
         res.send({
@@ -199,8 +199,8 @@ router.post('/getUserById', multipartMiddleware, (req, res, next) => {
         'userData': results,
       });
     });
-  });
   mysqlPool.releaseConnection(connection);
+  });
 });
 
 router.post('/listUsers', multipartMiddleware, (req, res, next) => {
@@ -234,8 +234,8 @@ router.post('/listUsers', multipartMiddleware, (req, res, next) => {
         'userData': results,
       });
     });
+    mysqlPool.releaseConnection(connection);
   });
-  mysqlPool.releaseConnection(connection);
 });
 
 router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
