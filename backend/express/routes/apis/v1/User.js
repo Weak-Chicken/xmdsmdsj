@@ -142,8 +142,8 @@ router.post('/getUserById', multipartMiddleware, (req, res, next) => {
         'success': true,
         'userData': results,
       });
-      mysqlPool.releaseConnection(connection);
     });
+    mysqlPool.releaseConnection(connection);
   });
 });
 
@@ -166,6 +166,7 @@ router.post('/listUsers', multipartMiddleware, (req, res, next) => {
   });
 });
 
+
 router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
   if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
 
@@ -178,6 +179,7 @@ router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
 
       // userData = results
     });
+    mysqlPool.releaseConnection(connection);
 
     connection.query(mysqlUserOp.getUserByIdNormal, uuid, (error, results, fields) => {
       if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
@@ -187,9 +189,10 @@ router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
         'userData': results,
       });
     });
+    mysqlPool.releaseConnection(connection);
   });
-  mysqlPool.releaseConnection(connection);
 });
+
 
 router.post('/listUsersDetails', multipartMiddleware, (req, res, next) => {
   if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
@@ -205,8 +208,11 @@ router.post('/listUsersDetails', multipartMiddleware, (req, res, next) => {
         'userData': results,
       });
     });
+    mysqlPool.releaseConnection(connection);
   });
-  mysqlPool.releaseConnection(connection);
 });
+
+
+
 
 module.exports = router;

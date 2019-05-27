@@ -29,6 +29,11 @@ export default new Router({
       path: '/upcoming',
       name: 'upcomingpage',
       component: () => import('@/views/UpComingPage.vue')
-    }
+    },
+    {
+      path: '/login',
+      name: 'authenticationpage',
+      component: () => import('@/views/AuthenticationPage.vue')
+    },
   ]
 })
