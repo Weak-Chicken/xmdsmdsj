@@ -1,17 +1,19 @@
 // Use express module
-var express = require('express');
-var multipart = require('connect-multiparty');
-var router = express.Router();
+let express = require('express');
+let multipart = require('connect-multiparty');
+let router = express.Router();
 
 // Use SQL modules with our configs
-var mysql = require('mysql');
-var mysqlConfig = require('../../../db/sql/sqlConfigs');
-var mysqlUserOp = require('../../../db/sql/userSqlOp');
-var flagCode = require('../../__flags__');
-var multipartMiddleware = multipart();
+let mysql = require('mysql');
+let mysqlConfig = require('../../../db/sql/sqlConfigs');
+let mysqlUserOp = require('../../../db/sql/userSqlOp');
+let flags = require('../../__flags__');
+
+let multipartMiddleware = multipart();
+let flagCode = flags.flags();
 
 // Build a connection pool for sql connection
-var mysqlPool = mysql.createPool(mysqlConfig.mysql);
+let mysqlPool = mysql.createPool(mysqlConfig.mysql);
 
 // User login
 // DO NOT use 'get' here. Use 'post' to secure user's password.
