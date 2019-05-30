@@ -11,5 +11,3 @@ services:
 
 
     command: [nginx, '-g', 'daemon off;']
-
-  backend:
