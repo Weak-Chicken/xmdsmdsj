@@ -25,7 +25,7 @@
           <button>Sign in</button>
         </div>
         <div class="loginForgotPassword">
-          <p>Forgot password?</p>
+          <p>Forgot password? Sing a song maybe :D</p>
         </div>
         <div class="loginRegister">
           <p>Don't have an account? <router-link to="/register" class="to-right">Join us</router-link></p>
