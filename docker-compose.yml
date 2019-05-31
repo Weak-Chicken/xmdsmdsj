@@ -11,3 +11,18 @@ services:
 
 
     command: [nginx, '-g', 'daemon off;']
+
+  mysql:
+    network_mode: "host"
+    environment:
+      MYSQL_ROOT_PASSWORD: "Yourpassw0rd!"
+      MYSQL_USER: 'jon_test'
+      MYSQL_PASS: 'Y0urpassword?'
+    image: "docker.io/mysql:latest" 
+    restart: always
+    volumes:
+      - "./Server/db/db:/var/lib/mysql"
+      - "./Server/db/conf/my.cnf:/etc/my.cnf"
+      - "./Server/db/init:/docker-entrypoint-initdb.d/"
+    ports:
+        - "3306:3306"
