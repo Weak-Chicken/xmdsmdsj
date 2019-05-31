@@ -13,9 +13,9 @@ services:
     command: [nginx, '-g', 'daemon off;']
   
   server:
-    build: ./Server
+    build: ./Server/server
     volumes:
-      - "./Server/etc:/etc"
+      - "./Server/server/etc:/etc"
 
     ports:
       - "3000:80"
