@@ -11,6 +11,17 @@ services:
 
 
     command: [nginx, '-g', 'daemon off;']
+  
+  server:
+    build: ./Server
+    volumes:
+      - "./Server/etc:/etc"
+
+    ports:
+      - "3000:80"
+
+
+    command: [nginx, '-g', 'daemon off;']
 
   mysql:
     network_mode: "host"
