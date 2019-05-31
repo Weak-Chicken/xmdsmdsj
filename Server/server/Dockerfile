@@ -1,5 +1,7 @@
-FROM nginx
-RUN touch /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/run/nginx.pid && \
-  chown -R www-data:www-data /var/cache/nginx
-USER www-data
+FROM node:latest
+
+RUN mkdir -p /server
+WORKDIR /server
+
+COPY ./express /server
+RUN npm install
