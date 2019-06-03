@@ -1,15 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var logger = require('morgan');
+let createError = require('http-errors');
+let express = require('express');
+let path = require('path');
+let cookieParser = require('cookie-parser');
+let session = require('express-session');
+let logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var userRouter = require('./routes/apis/v1/User');
+let indexRouter = require('./routes/index');
+let userRouter = require('./routes/apis/v1/User');
 // var testRouter = require('./routes/test');
 
-var app = express();
+let app = express();
+
+let cookieEncryptionToken = require('./.secret.js').cookieEncryptionToken;
+let sessionEncryptionToken = require('./.secret.js').sessionEncryptionToken;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -18,12 +21,12 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser('xmdsmdsjy,xmdy'));
+app.use(cookieParser(cookieEncryptionToken));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
   name: 'xmdsmdsj.login',
-  secret: 'xmdsmdsjy,xmdy',
+  secret: sessionEncryptionToken,
   resave: true,
   saveUninitialized: false,
   cookie: { maxAge: 60 * 60 * 24, httpOnly: true }
