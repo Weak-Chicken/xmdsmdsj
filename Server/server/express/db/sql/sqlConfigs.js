@@ -1,9 +1,5 @@
+let mysql = require('../../.secret.js').mysql;
+
 module.exports = {  
-  mysql: {   
-    host: '192.168.240.141',     
-    user: 'root',   
-    password: 'Mypassword',  
-    database:'expressdb', 
-    port: 3306  
-  }
- };
+  mysql
+};
