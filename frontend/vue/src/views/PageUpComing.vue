@@ -1,12 +1,12 @@
 <template>
-  <div class="upComing">
+  <div class="pageUpComing">
 
   </div>
 </template>
 
 <script>
 export default {
-  name: 'upcomingpage',
+  name: 'pageupcoming',
 
   data() {
     return {

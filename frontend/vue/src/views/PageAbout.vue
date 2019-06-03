@@ -1,5 +1,5 @@
 <template>
-  <div class="aboutPage">
+  <div class="pageAbout">
     <div class="title">
       <h1>About</h1>
     </div>
@@ -14,7 +14,7 @@
 <script>
 
 export default {
-  name: 'aboutpage',
+  name: 'pageabout',
 
   data() {
     return {
@@ -25,10 +25,10 @@ export default {
 </script>
 
 <style scoped>
-  .aboutPage .title {
+  .pageAbout .title {
     text-align: center;
   }
-  .aboutPage .content p {
+  .pageAbout .content p {
     text-align: center;
     padding: 1rem 0rem;
   }

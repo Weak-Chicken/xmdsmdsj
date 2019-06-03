@@ -1,5 +1,5 @@
 <template>
-  <div class="articlePage">
+  <div class="pageArticle">
     <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
     <div v-html="topicPlaceHolder"></div>
   </div>
@@ -9,7 +9,7 @@
 import VirtualDataServer from '@/temp/VirtualDataServer.vue';
 
 export default {
-  name: 'articlepage',
+  name: 'pagearticle',
 
   data() {
     return {

@@ -1,5 +1,5 @@
 <template>
-  <div class="homePage">
+  <div class="pagehome">
     <div v-html="MDFilePlaceHolder"></div>
   </div>
 </template>
@@ -9,7 +9,7 @@ import TestMD from '../../README.md';
 import axios from 'axios';
 
 export default {
-  name: 'homepage',
+  name: 'pagehome',
 
   components: {
 

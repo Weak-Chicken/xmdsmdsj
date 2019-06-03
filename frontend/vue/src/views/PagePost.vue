@@ -1,5 +1,5 @@
 <template>
-  <div class="postPage">
+  <div class="pagePost">
     <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
     <ol>
       <li class="onePost" v-for="post in posts" v-bind:key="post.id">
@@ -15,7 +15,7 @@
 import VirtualDataServer from '@/temp/VirtualDataServer.vue';
 
 export default {
-  name: 'postpage',
+  name: 'pagepost',
 
   data() {
     return {

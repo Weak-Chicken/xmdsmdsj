@@ -8,37 +8,37 @@ export default new Router({
     {
       path: '/',
       name: 'homepage',
-      component: () => import('@/views/HomePage.vue')
+      component: () => import('@/views/PageHome.vue')
     },
     {
       path: '/about',
       name: 'aboutpage',
-      component: () => import('@/views/AboutPage.vue')
+      component: () => import('@/views/PageAbout.vue')
     },
     {
       path: '/article',
       name: 'postpage',
-      component: () => import('@/views/PostPage.vue')
+      component: () => import('@/views/PagePost.vue')
     },
     {
       path: '/article/:articleId',
       name: 'articlepage',
-      component: () => import('@/views/ArticlePage.vue')
+      component: () => import('@/views/PageArticle.vue')
     },
     {
       path: '/upcoming',
       name: 'upcomingpage',
-      component: () => import('@/views/UpComingPage.vue')
+      component: () => import('@/views/PageUpComing.vue')
     },
     {
       path: '/login',
       name: 'authenticationpage',
-      component: () => import('@/views/AuthenticationPage.vue')
+      component: () => import('@/views/PageAuthentication.vue')
     },
     {
       path: '/register',
       name: 'authenticationpage',
-      component: () => import('@/views/AuthenticationPage.vue')
+      component: () => import('@/views/PageAuthentication.vue')
     },
   ]
 })

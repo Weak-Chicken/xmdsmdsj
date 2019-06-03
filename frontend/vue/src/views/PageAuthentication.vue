@@ -1,5 +1,5 @@
 <template>
-  <div class="authenticationPage">
+  <div class="pageAuthentication">
     <div v-if="currentPage === '/login'">
       <div class="loginBox">
         <div class="loginAccount">
@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  name: 'authenticationpage',
+  name: 'pageauthentication',
 
   data() {
     return {
