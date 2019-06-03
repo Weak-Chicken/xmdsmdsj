@@ -1,6 +1,8 @@
 <template>
   <div class="pageUpComing">
-
+    <div class="test">
+      {{ envVariable }}
+    </div>
   </div>
 </template>
 
@@ -10,7 +12,7 @@ export default {
 
   data() {
     return {
-
+      envVariable: process.env.VUE_APP_XM,
     }
   },
 
