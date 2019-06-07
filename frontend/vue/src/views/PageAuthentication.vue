@@ -7,7 +7,7 @@
             <label for="account">Account:</label>
           </div> 
           <div class="loginInput">
-            <input type="text" id="account">
+            <input v-model="userName" type="text" id="account">
           </div>
         </div>
         <div class="loginPassword">
@@ -15,14 +15,19 @@
             <label for="password">Password:</label>
           </div>
           <div class="loginInput">
-            <input type="password" id="password">
+            <input v-model="userPwd" type="password" id="password">
           </div>
         </div>
         <div class="loginRemeber">
           <p>Current no remeber option</p>
         </div>
         <div class="loginButtons">
-          <button>Sign in</button>
+          <button @click="signin">Sign in</button>
+        </div>
+        <div v-if="loginResults != ''" class="loginErrors">
+          <div v-if="loginResults.success === false">
+            <p>{{ loginErrorMessage }}</p>
+          </div>
         </div>
         <div class="loginForgotPassword">
           <p>Forgot password? Sing a song maybe :D</p>
@@ -43,13 +48,18 @@
 </template>
 
 <script>
+import DataProvider from '@/components/utils/DataProvider.js';
+
 export default {
   name: 'pageauthentication',
 
   data() {
     return {
       currentPage: '',
-
+      userName: '',
+      userPwd: '',
+      loginResults: '',
+      loginErrorMessage: 'Login Error!',
     }
   },
 
@@ -64,7 +74,34 @@ export default {
   },
   
   methods: {
+    signin() {
+      if (!this.userName) {
+        alert('Please input your account!');
+      } else if (!this.userPwd) {
+        alert('Please input your password!');
+      } else {
+        let signInData = {
+          userName: this.userName,
+          userPwd: this.userPwd,
+        }
 
+        this.loginResults = DataProvider.user_login(process.env.NODE_ENV, signInData, false);
+        switch(this.loginResults.flag) {
+          case 'ERROR_USER_NOT_FOUND':
+            this.loginErrorMessage = 'User is not registered!';
+            break;
+          case 'ERROR_USER_NAME_OR_PASSWORD_WRONG':
+          case 'ERROR_USER_UUId_WRONG':
+          case 'ERROR_USER_NAME_WRONG':
+          case 'ERROR_USER_PASSWORD_WRONG':
+            this.loginErrorMessage = 'User name or password is wrong!';
+            break;
+          case 'ERROR_UNKNOWN_USER_LOGIN_ERROR':
+            this.loginErrorMessage = 'Unknown internal error. Please ask our web engineers for more infomation.';
+        }
+        console.log(this.loginResults);
+      }
+    },
   },
 }
 </script>
@@ -122,6 +159,11 @@ export default {
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
   color:rgba(89, 116, 202, 0.87);
+}
+
+.loginBox .loginErrors p {
+  padding-top: 0.5rem;
+  color: red;
 }
 
 .loginBox .loginRemeber {
