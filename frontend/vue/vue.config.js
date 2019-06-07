@@ -12,5 +12,5 @@ module.exports = {
       .use('html-loader')
       .loader('html-loader')
       .end()
-  }
+  },
 }
