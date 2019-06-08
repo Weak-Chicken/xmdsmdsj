@@ -1,9 +1,9 @@
 export default {
-  loggingIn({ commit }) {
-    commit('LOGGING_IN');
+  loggingIn({ commit }, userData) {
+    commit('LOGGING_IN', userData);
   },
 
-  loggingOut({ commit }) {
-    commit('LOGGING_OUT');
+  loggingOut({ commit }, userData) {
+    commit('LOGGING_OUT', userData);
   },
 }

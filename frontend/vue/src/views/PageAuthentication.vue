@@ -79,6 +79,7 @@ export default {
   computed: {
     ...mapGetters ([
       'checkLogin',
+      'getUserName',
     ]),
   },
   
@@ -101,7 +102,7 @@ export default {
 
         this.loginResults = DataProvider.user_login(process.env.NODE_ENV, signInData, true);
         if (this.loginResults.success) {
-          this.loggingIn();
+          this.loggingIn(this.loginResults.userData);
         } else {
           switch(this.loginResults.flag) {
           case 'ERROR_USER_NOT_FOUND':

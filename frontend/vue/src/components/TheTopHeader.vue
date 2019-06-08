@@ -4,11 +4,14 @@
     <router-link to="/article">Articles</router-link>
     <router-link to="/upcoming">Up Coming</router-link>
     <router-link to="/about">About</router-link>
-    <router-link to="/login" class="to-right">Sign in / Sign up</router-link>
+    <router-link v-if="!checkLogin" to="/login" class="to-right">Sign in / Sign up</router-link>
+    <router-link v-else-if="checkLogin" :to="{name: 'pageuserinfo', params: { userName: this.$store.getters.getUserName }}" class="to-right">Welcome! {{ this.$store.getters.getUserName }}</router-link>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'thetopheader',
 
@@ -17,7 +20,10 @@ export default {
   },
 
   computed: {
-
+    ...mapGetters ({
+      checkLogin: 'checkLogin',
+      getUserName: 'getUserName',
+    })
   },
 };
 </script>

@@ -7,42 +7,47 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'homepage',
+      name: 'pagehome',
       component: () => import('@/views/PageHome.vue'),
     },
     {
       path: '/about',
-      name: 'aboutpage',
+      name: 'pageabout',
       component: () => import('@/views/PageAbout.vue'),
     },
     {
       path: '/article',
-      name: 'postpage',
+      name: 'pagepost',
       component: () => import('@/views/PagePost.vue'),
     },
     {
       path: '/article/:articleId',
-      name: 'articlepage',
+      name: 'pagearticle',
       component: () => import('@/views/PageArticle.vue'),
     },
     {
       path: '/upcoming',
-      name: 'upcomingpage',
+      name: 'pageupcoming',
       component: () => import('@/views/PageUpComing.vue'),
-      meta: {
-        requireAuthentication: true,
-      },
     },
     {
       path: '/login',
-      name: 'authenticationpage',
+      name: 'pageauthentication',
       component: () => import('@/views/PageAuthentication.vue'),
     },
     {
       path: '/register',
-      name: 'authenticationpage',
+      name: 'pageauthentication',
       component: () => import('@/views/PageAuthentication.vue'),
     },
+    {
+      path: '/user/:userName',
+      name: 'pageuserinfo',
+      component: () => import('@/views/PageUserInfo.vue'),
+      meta: {
+        requireAuthentication: true,
+      }
+    }
   ]
 });
 
