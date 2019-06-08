@@ -1,21 +1,37 @@
 <template>
   <div class="pageUpComing">
     <div class="test">
-      {{ test_data }}
+      {{ count_test }}
     </div>
+    <button @click="addHellows">Change</button>
   </div>
 </template>
 
 <script>
 import DataProvider from '@/components/utils/DataProvider.js';
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'pageupcoming',
 
   data() {
     return {
-      test_data: DataProvider.data_provider_tester(process.env.NODE_ENV),
+
     }
+  },
+
+  computed: {
+    ...mapState({
+      count_test: state => state.count_test,
+    })
+  },
+
+  methods: {
+    ...mapActions({
+      addHellows: 'addHellows',
+      addHellowsAlt: 'addHellowsAlt',
+    })
   },
 }
 </script>

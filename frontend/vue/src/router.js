@@ -48,7 +48,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuthentication) {
-    alert('Ass we can');
+    // alert('Ass we can');
     next();
   } else {
     // If the page does not need authentication, let user in
