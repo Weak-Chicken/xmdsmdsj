@@ -1,3 +1,3 @@
 export default {
-  count_test: 'hello ',
+  loggedIn: false,
 }

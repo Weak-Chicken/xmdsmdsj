@@ -49,6 +49,9 @@
 
 <script>
 import DataProvider from '@/components/utils/DataProvider.js';
+import { mapState } from 'vuex';
+import { mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'pageauthentication',
@@ -72,8 +75,19 @@ export default {
       this.currentPage = val;
 		}
   },
+
+  computed: {
+    ...mapGetters ([
+      'checkLogin',
+    ]),
+  },
   
   methods: {
+    ...mapActions ({
+      loggingIn: 'loggingIn',
+      loggingOut: 'loggingOut',
+    }),
+
     signin() {
       if (!this.userName) {
         alert('Please input your account!');
@@ -85,8 +99,11 @@ export default {
           userPwd: this.userPwd,
         }
 
-        this.loginResults = DataProvider.user_login(process.env.NODE_ENV, signInData, false);
-        switch(this.loginResults.flag) {
+        this.loginResults = DataProvider.user_login(process.env.NODE_ENV, signInData, true);
+        if (this.loginResults.success) {
+          this.loggingIn();
+        } else {
+          switch(this.loginResults.flag) {
           case 'ERROR_USER_NOT_FOUND':
             this.loginErrorMessage = 'User is not registered!';
             break;
@@ -98,10 +115,11 @@ export default {
             break;
           case 'ERROR_UNKNOWN_USER_LOGIN_ERROR':
             this.loginErrorMessage = 'Unknown internal error. Please ask our web engineers for more infomation.';
+          }
         }
-        console.log(this.loginResults);
       }
     },
+
   },
 }
 </script>

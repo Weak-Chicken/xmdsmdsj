@@ -1,9 +1,10 @@
 <template>
   <div class="pageUpComing">
-    <div class="test">
+    <!-- <div class="test">
       {{ count_test }}
     </div>
-    <button @click="addHellows">Change</button>
+    <button @click="addHellows">Change</button> -->
+    <p>Aloha!</p>
   </div>
 </template>
 
@@ -21,18 +22,18 @@ export default {
     }
   },
 
-  computed: {
-    ...mapState({
-      count_test: state => state.count_test,
-    })
-  },
+  // computed: {
+  //   ...mapState({
+  //     count_test: state => state.count_test,
+  //   })
+  // },
 
-  methods: {
-    ...mapActions({
-      addHellows: 'addHellows',
-      addHellowsAlt: 'addHellowsAlt',
-    })
-  },
+  // methods: {
+  //   ...mapActions({
+  //     addHellows: 'addHellows',
+  //     addHellowsAlt: 'addHellowsAlt',
+  //   })
+  // },
 }
 </script>
 

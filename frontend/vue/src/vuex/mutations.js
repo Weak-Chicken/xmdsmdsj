@@ -1,5 +1,9 @@
 export default {
-  ADD_HELLOS(state) {
-    state.count_test += '123';
-  }
+  LOGGING_IN(state) {
+    state.loggedIn = true;
+  },
+
+  LOGGING_OUT(state) {
+    state.loggedIn = false;
+  },
 }

@@ -1,9 +1,9 @@
 export default {
-  addHellows(context) {
-    context.commit('ADD_HELLOS');
+  loggingIn({ commit }) {
+    commit('LOGGING_IN');
   },
 
-  addHellowsAlt({commit}) {
-    commit('ADD_HELLOS');
-  }
+  loggingOut({ commit }) {
+    commit('LOGGING_OUT');
+  },
 }
