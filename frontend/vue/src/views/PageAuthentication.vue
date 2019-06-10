@@ -100,7 +100,7 @@ export default {
           userPwd: this.userPwd,
         }
 
-        this.loginResults = DataProvider.user_login(process.env.NODE_ENV, signInData, true);
+        this.loginResults = DataProvider.user_login(process.env.VUE_APP_ENV_CODE, signInData, true);
         if (this.loginResults.success) {
           this.loggingIn(this.loginResults.userData);
           this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserName}})

@@ -18,7 +18,7 @@ export default {
 
   data() {
     return {
-      envMode: process.env.NODE_ENV
+      envMode: process.env.VUE_APP_ENV_CODE
     }
   },
 

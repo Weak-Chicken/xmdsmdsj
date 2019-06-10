@@ -5,14 +5,14 @@ let version_number = 'v1'
  * THREE modes plus ONE buildlocal mode.
  */
 export default {
-  user_login(NODE_ENV, data, succeeded, func_name) {
+  user_login(ENV_CODE, data, succeeded, func_name) {
     // Name of this API function
     func_name = version_number + ': user_login';
 
     // Choose working mode
-    if (NODE_ENV === 'production') {
+    if (ENV_CODE === 'production') {
       throw (func_name + ' ERROR: production Mode is not defined!');
-    } else if (NODE_ENV === 'development') {
+    } else if (ENV_CODE === 'development') {
       if (succeeded) {
         return {
           "success": true,
@@ -32,9 +32,9 @@ export default {
           "flag": "ERROR_USER_NAME_WRONG"
         }
       }
-    } else if (NODE_ENV === 'buildlocal') {
+    } else if (ENV_CODE === 'buildlocal') {
       throw (func_name + ' ERROR: buildlocal Mode is not defined!');
-    } else if (NODE_ENV === 'test') {
+    } else if (ENV_CODE === 'test') {
       throw (func_name + ' ERROR: test Mode is not defined!');
     } else {
       throw ('ERROR: Mode is not defined!');
