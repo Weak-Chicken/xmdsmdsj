@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import store from './vuex/store'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -53,10 +55,14 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requireAuthentication) {
-    // alert('Ass we can');
-    next();
+    if (store.getters.checkLogin) {
+      next();
+    } else {
+      alert('Please log in to visit this page!');
+      next({path: '/login'});
+    }
   } else {
-    // If the page does not need authentication, let user in
+    // If the page does not need authentication, let users in
     next();
   }
 });
