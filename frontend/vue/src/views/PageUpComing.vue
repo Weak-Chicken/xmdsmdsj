@@ -1,10 +1,10 @@
 <template>
   <div class="pageUpComing">
-    <!-- <div class="test">
-      {{ count_test }}
+    <div class="test">
+      {{ envMode }}
     </div>
-    <button @click="addHellows">Change</button> -->
-    <p>Aloha!</p>
+    <!-- <button @click="addHellows">Change</button> -->
+    <!-- <p>Aloha!</p> -->
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
 
   data() {
     return {
-
+      envMode: process.env.NODE_ENV
     }
   },
 

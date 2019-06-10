@@ -2,7 +2,7 @@ import v1 from './API_v1'
 
 /**
  * Define your APIs here. Please notice that you need to define data obtain methods for
- * THREE mode.
+ * THREE modes plus ONE buildlocal mode.
  */
 export default {
   data_provider_tester(NODE_ENV) {
@@ -12,6 +12,8 @@ export default {
       throw (func_name + ' ERROR: production Mode is not defined!');
     } else if (NODE_ENV === 'development') {
       throw (func_name + ' ERROR: development Mode is not defined!');
+    } else if (NODE_ENV === 'buildlocal') {
+      throw (func_name + ' ERROR: buildlocal Mode is not defined!');
     } else if (NODE_ENV === 'test') {
       throw (func_name + ' ERROR: test Mode is not defined!');
     } else {

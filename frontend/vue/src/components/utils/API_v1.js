@@ -2,7 +2,7 @@ let version_number = 'v1'
 
 /**
  * Define your APIs here. Please notice that you need to define data obtain methods for
- * THREE mode.
+ * THREE modes plus ONE buildlocal mode.
  */
 export default {
   user_login(NODE_ENV, data, succeeded, func_name) {
@@ -32,6 +32,8 @@ export default {
           "flag": "ERROR_USER_NAME_WRONG"
         }
       }
+    } else if (NODE_ENV === 'buildlocal') {
+      throw (func_name + ' ERROR: buildlocal Mode is not defined!');
     } else if (NODE_ENV === 'test') {
       throw (func_name + ' ERROR: test Mode is not defined!');
     } else {
