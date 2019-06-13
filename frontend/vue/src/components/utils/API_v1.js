@@ -1,4 +1,9 @@
-let version_number = 'v1'
+import axios from 'axios';
+
+let versionNumber = 'v1';
+
+let buildLocalAddress = '192.168.240.140';
+let productionAddress = 'xmdsmdsj.club';
 
 /**
  * Define your APIs here. Please notice that you need to define data obtain methods for
@@ -7,7 +12,7 @@ let version_number = 'v1'
 export default {
   user_login(ENV_CODE, data, succeeded, func_name) {
     // Name of this API function
-    func_name = version_number + ': user_login';
+    func_name = versionNumber + ': user_login';
 
     // Choose working mode
     if (ENV_CODE === 'production') {
@@ -33,7 +38,16 @@ export default {
         }
       }
     } else if (ENV_CODE === 'buildlocal') {
-      throw (func_name + ' ERROR: buildlocal Mode is not defined!');
+      axios.post(buildLocalAddress, {
+        userName: data.userName,
+        userPwd: data.userPwd,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     } else if (ENV_CODE === 'test') {
       throw (func_name + ' ERROR: test Mode is not defined!');
     } else {
