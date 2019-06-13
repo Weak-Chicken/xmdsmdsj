@@ -27,16 +27,14 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
     if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
 
     let [
-      uuid,
       userName,
       userPwd,
     ] = [
-        parseInt(req.body.uuid),
         req.body.userName,
         req.body.userPwd,
       ];
 
-    connection.query(mysqlUserOp.getUserById, [uuid], (error, results, fields) => {
+    connection.query(mysqlUserOp.getUserByName, [userName], (error, results, fields) => {
       if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
       
       if (results.length === 0) { // TODO: improve here!
@@ -51,7 +49,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
       results = results[0]
       let sentData;
 
-      if ((results.uuid == uuid) && (results.userName == userName) && (results.userPwd == userPwd)) {
+      if (results.userName == userName && results.userPwd == userPwd) {
         req.session.logIn = true;
         req.session.logInUser = results.uuid;
 
@@ -62,12 +60,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
         };
       } else {
         res.status(400);
-        if (results.uuid != uuid) {
-          sentData = {
-            'success': false,
-            'flag': flagCode.ERROR_USER_UUId_WRONG
-          };
-        } else if (results.userName != userName) {
+        if (results.userName != userName) {
           sentData = {
             'success': false,
             'flag': flagCode.ERROR_USER_NAME_WRONG
