@@ -1,7 +1,9 @@
 cd "./frontend/vue"
 
-REM cmd /k "npm run buildlocal"
-npm run buildlocal
+REM Type "exit" when npm run finished to run the rest code
+pause
+cmd /k "npm run buildlocal"
+
 
 cd ..
 cd ..
