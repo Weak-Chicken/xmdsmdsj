@@ -2,7 +2,7 @@
 
 @ echo Type 'exit' when npm run finished to run the rest code
 @ pause
-cmd /k "npm run buildlocal"
+cmd /k "npm run build"
 
 
 cd ..
