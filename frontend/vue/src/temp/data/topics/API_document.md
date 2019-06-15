@@ -4,7 +4,6 @@
 ##### input
 > ```json
 > {
->   "uuid": (int) user's id,
 >   "userName": "user's name",
 >   "userPwd": "user's password",
 > }

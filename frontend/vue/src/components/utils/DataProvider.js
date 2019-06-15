@@ -28,7 +28,11 @@ export default {
     // Current using API version
     let latestVersion = v1;
 
-    // Data vaildation here. In this function we don't need validation
+    // Data vaildation here. Give your validation proper levels. Don't interrupt users unless
+    // necessary.
+    if (!data.userName || !data.userPwd) {
+      throw('Error: No input of userName or userPassword! And the developer seems forgot to deal with it!');
+    }
 
     // Choose versions
     if (version === '' || version === 'latest') {

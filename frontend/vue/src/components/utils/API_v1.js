@@ -16,8 +16,11 @@ export default {
 
     // Choose working mode
     if (ENV_CODE === 'production') {
+
       throw (func_name + ' ERROR: production Mode is not defined!');
+
     } else if (ENV_CODE === 'development') {
+
       if (succeeded) {
         return {
           "success": true,
@@ -37,8 +40,9 @@ export default {
           "flag": "ERROR_USER_NAME_WRONG"
         }
       }
+
     } else if (ENV_CODE === 'buildlocal') {
-      axios.post(buildLocalAddress, {
+      axios.post(buildLocalAddress + ':3000', {
         userName: data.userName,
         userPwd: data.userPwd,
       })
@@ -48,10 +52,15 @@ export default {
       .catch(function (error) {
         console.log(error);
       });
+
     } else if (ENV_CODE === 'test') {
+
       throw (func_name + ' ERROR: test Mode is not defined!');
+
     } else {
+
       throw ('ERROR: Mode is not defined!');
+
     }
   },
 }
