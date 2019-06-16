@@ -7,12 +7,28 @@ let productionAddress = 'xmdsmdsj.club';
 
 axios.defaults.withCredentials = true;
 
+function responseStore() {
+  let storedResponse;
+
+  function getResponse() {
+    return storedResponse;
+  }
+
+  function setResponse(response) {
+    storedResponse = response;
+  }
+
+  return { setResponse, getResponse }
+}
+
+const responseManager = responseStore();
+
 /**
  * Define your functions for each API here. Two functions for one API, the 'fake' function
  * and 'production' function.
  */
 
-function user_login_fake(succeeded) {
+function userLoginFake(succeeded) {
   if (succeeded) {
     return {
       "success": true,
@@ -34,17 +50,19 @@ function user_login_fake(succeeded) {
   }
 }
 
-function user_login_prod(address, data) {
-  axios.post('http://localhost:3000/v1/User/Login/', {
-    userName: data.userName,
-    userPwd: data.userPwd,
+function userLoginProd(address, data) {
+  return new Promise((resolve, reject) => {
+    axios.post('http://localhost:3000/v1/User/Login/', {
+      userName: data.userName,
+      userPwd: data.userPwd,
+    })
+    .then((response) => {
+      resolve(response.data)
+    })
+    .catch((error) => {
+      reject(error)
+    });
   })
-  .then(function (response) {
-    console.log(response);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 }
 
 /**
@@ -52,7 +70,7 @@ function user_login_prod(address, data) {
  * THREE modes plus ONE buildlocal mode.
  */
 export default {
-  user_login(ENV_CODE, data, succeeded, func_name) {
+  userLogin(ENV_CODE, data, succeeded, func_name) {
     // Name of this API function
     func_name = versionNumber + ': user_login';
 
@@ -63,9 +81,10 @@ export default {
 
     } else if (ENV_CODE === 'development') {
 
-      // return user_login_fake(succeeded);
-
-      user_login_prod(buildLocalAddress, data);
+      // return userLoginFake(succeeded);
+      let userres = userLoginProd(buildLocalAddress, data);
+      console.log('test', userres);
+      return userres;
 
     } else if (ENV_CODE === 'buildlocal') {
 

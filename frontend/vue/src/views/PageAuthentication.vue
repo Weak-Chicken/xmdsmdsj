@@ -52,6 +52,7 @@ import DataProvider from '@/components/utils/DataProvider.js';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
+import axios from 'axios';
 
 export default {
   name: 'pageauthentication',
@@ -89,7 +90,7 @@ export default {
       loggingOut: 'loggingOut',
     }),
 
-    signin() {
+    async signin() {
       if (!this.userName) {
         alert('Please input your account!');
       } else if (!this.userPwd) {
@@ -100,11 +101,19 @@ export default {
           userPwd: this.userPwd,
         }
 
-        this.loginResults = DataProvider.user_login(process.env.VUE_APP_ENV_CODE, signInData, true);
+        // this.loginResults = DataProvider.userLogin(process.env.VUE_APP_ENV_CODE, signInData, true);
+        await axios.post('http://localhost:3000/v1/User/Login/', {
+          userName: this.userName,
+          userPwd: this.userPwd,
+        })
+        .then((response) => { this.loginResults = response.data })
+        .catch((error) => { console.log(error) });
+
         if (this.loginResults.success) {
           this.loggingIn(this.loginResults.userData);
           this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserName}})
         } else {
+          console.log(this.loginResults.flag);
           switch(this.loginResults.flag) {
           case 'ERROR_USER_NOT_FOUND':
             this.loginErrorMessage = 'User is not registered!';

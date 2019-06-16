@@ -5,26 +5,26 @@ import v1 from './API_v1'
  * THREE modes plus ONE buildlocal mode.
  */
 export default {
-  data_provider_tester(ENV_CODE) {
-    let func_name = 'data_provider_tester';
+  dataProviderTester(ENV_CODE) {
+    let funcName = 'data_provider_tester';
 
     if (ENV_CODE === 'production') {
-      throw (func_name + ' ERROR: production Mode is not defined!');
+      throw (funcName + ' ERROR: production Mode is not defined!');
     } else if (ENV_CODE === 'development') {
-      throw (func_name + ' ERROR: development Mode is not defined!');
+      throw (funcName + ' ERROR: development Mode is not defined!');
     } else if (ENV_CODE === 'buildlocal') {
-      throw (func_name + ' ERROR: buildlocal Mode is not defined!');
+      throw (funcName + ' ERROR: buildlocal Mode is not defined!');
     } else if (ENV_CODE === 'test') {
-      throw (func_name + ' ERROR: test Mode is not defined!');
+      throw (funcName + ' ERROR: test Mode is not defined!');
     } else {
       throw ('ERROR: Mode is not defined!');
     }
   },
 
-  user_login(ENV_CODE, data, succeeded, version='') {
+  userLogin(ENV_CODE, data, succeeded, version='') {
     // Name of our function
     // Here we will let the different versions of API functions to give the name of our function
-    let func_name = '';
+    let funcName = '';
     // Current using API version
     let latestVersion = v1;
 
@@ -36,12 +36,13 @@ export default {
 
     // Choose versions
     if (version === '' || version === 'latest') {
-      return latestVersion.user_login(ENV_CODE, data, succeeded, func_name);
+      console.log('outter', latestVersion.userLogin(ENV_CODE, data, succeeded, funcName))
+      return latestVersion.userLogin(ENV_CODE, data, succeeded, funcName);
     } else if (version === 'v1') {
-      return v1.user_login(ENV_CODE, data, succeeded, func_name);
+      return v1.userLogin(ENV_CODE, data, succeeded, funcName);
     } else {
       console.log("Warning: You haven't define a legal version number of user login API!");
-      return latestVersion.user_login(ENV_CODE, data, succeeded, func_name);
+      return latestVersion.userLogin(ENV_CODE, data, succeeded, funcName);
     }
   },
 };

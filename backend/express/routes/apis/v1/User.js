@@ -38,7 +38,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
       if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
       
       if (results.length === 0) { // TODO: improve here!
-        res.status(401);
+        res.status(200);
         res.send({
           'success': false,
           'flag': flagCode.ERROR_USER_NOT_FOUND
@@ -59,7 +59,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
           'userData': results,
         };
       } else {
-        res.status(401);
+        res.status(200);
         if (results.userName != userName) {
           sentData = {
             'success': false,
