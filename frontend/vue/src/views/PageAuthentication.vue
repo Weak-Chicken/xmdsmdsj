@@ -68,7 +68,6 @@ export default {
 
   created() {
     this.currentPage = this.$route.path;
-    console.log(this.DataProvider.userLogin(true));
   },
 
   watch: {
