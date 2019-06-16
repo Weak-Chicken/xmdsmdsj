@@ -5,6 +5,8 @@ let versionNumber = 'v1';
 let buildLocalAddress = '192.168.240.140';
 let productionAddress = 'xmdsmdsj.club';
 
+axios.defaults.withCredentials = true;
+
 /**
  * Define your functions for each API here. Two functions for one API, the 'fake' function
  * and 'production' function.
@@ -33,7 +35,7 @@ function user_login_fake(succeeded) {
 }
 
 function user_login_prod(address, data) {
-  axios.post('http://192.168.240.140:3000/v1/User/Login/', {
+  axios.post('http://localhost:3000/v1/User/Login/', {
     userName: data.userName,
     userPwd: data.userPwd,
   })
