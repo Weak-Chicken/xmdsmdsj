@@ -49,6 +49,7 @@
 
 <script>
 import DataProvider from '@/components/utils/DataProvider.js';
+import ErrorCodes from '@/components/utils/ErrorCodes.js';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
@@ -106,26 +107,13 @@ export default {
           userPwd: this.userPwd,
         })
         .then((response) => { this.loginResults = response.data })
-        .catch((error) => { console.log(error) });
+        .catch((error) => { this.loginResults = error.response.data });
 
         if (this.loginResults.success) {
           this.loggingIn(this.loginResults.userData);
           this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserName}})
         } else {
-          console.log(this.loginResults.flag);
-          switch(this.loginResults.flag) {
-          case 'ERROR_USER_NOT_FOUND':
-            this.loginErrorMessage = 'User is not registered!';
-            break;
-          case 'ERROR_USER_NAME_OR_PASSWORD_WRONG':
-          case 'ERROR_USER_UUId_WRONG':
-          case 'ERROR_USER_NAME_WRONG':
-          case 'ERROR_USER_PASSWORD_WRONG':
-            this.loginErrorMessage = 'User name or password is wrong!';
-            break;
-          case 'ERROR_UNKNOWN_USER_LOGIN_ERROR':
-            this.loginErrorMessage = 'Unknown internal error. Please ask our web engineers for more infomation.';
-          }
+          this.loginErrorMessage = ErrorCodes.getLoginErrorMessage(this.loginResults.flag);
         }
       }
     },
