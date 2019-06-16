@@ -5,6 +5,11 @@ import store from './vuex/store'
 
 Vue.config.productionTip = false
 
+import axios from 'axios'
+import vueAxios from 'vue-axios'
+
+Vue.use(vueAxios, axios)
+
 new Vue({
   router,
   store,

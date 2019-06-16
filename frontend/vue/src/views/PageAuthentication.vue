@@ -52,7 +52,6 @@ import DataProvider from '@/components/utils/DataProvider.js';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 import { mapGetters } from 'vuex';
-import axios from 'axios';
 
 export default {
   name: 'pageauthentication',
@@ -102,7 +101,7 @@ export default {
         }
 
         // this.loginResults = DataProvider.userLogin(process.env.VUE_APP_ENV_CODE, signInData, true);
-        await axios.post('http://localhost:3000/v1/User/Login/', {
+        await this.axios.post('http://localhost:3000/v1/User/Login/', {
           userName: this.userName,
           userPwd: this.userPwd,
         })
