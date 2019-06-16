@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import DataProvider from '@/components/utils/DataProvider.js';
 import ErrorCodes from '@/components/utils/ErrorCodes.js';
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
@@ -69,6 +68,7 @@ export default {
 
   created() {
     this.currentPage = this.$route.path;
+    console.log(this.DataProvider.userLogin(true));
   },
 
   watch: {
@@ -102,7 +102,7 @@ export default {
         }
 
         // this.loginResults = DataProvider.userLogin(process.env.VUE_APP_ENV_CODE, signInData, true);
-        await this.axios.post('http://localhost:3000/v1/User/Login/', {
+        await this.axios.post('/v1/User/Login/', {
           userName: this.userName,
           userPwd: this.userPwd,
         })

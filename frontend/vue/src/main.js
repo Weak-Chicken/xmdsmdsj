@@ -8,7 +8,13 @@ Vue.config.productionTip = false
 import axios from 'axios'
 import vueAxios from 'vue-axios'
 
+axios.defaults.baseURL = process.env.VUE_APP_BACKEND_ADD
+
 Vue.use(vueAxios, axios)
+
+import DataProvider from '@/components/utils/DataProvider.js';
+
+Vue.use(DataProvider)
 
 new Vue({
   router,

@@ -18,6 +18,10 @@ export default {
     TheFooter,
   },
 
+  created() {
+
+  }
+
 };
 </script>
 
