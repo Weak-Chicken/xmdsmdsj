@@ -13,6 +13,7 @@ let app = express();
 
 let cookieEncryptionToken = require('./.secret.js').cookieEncryptionToken;
 let sessionEncryptionToken = require('./.secret.js').sessionEncryptionToken;
+let frontendAddress = require('./.secret.js').frontendAddress;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(cookieEncryptionToken));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Cross-domain settings
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", frontendAddress);
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  next();
+});
 
 app.use(session({
   name: 'xmdsmdsj.login',
