@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import VirtualDataServer from '@/temp/VirtualDataServer.vue';
-
 export default {
   name: 'pagearticle',
 
@@ -18,7 +16,7 @@ export default {
   },
 
   components: {
-    VirtualDataServer,
+    
   },
 
   methods: {

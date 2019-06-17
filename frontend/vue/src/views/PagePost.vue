@@ -3,7 +3,7 @@
     <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
     <ol>
       <li class="onePost" v-for="post in posts" v-bind:key="post.id">
-        <router-link :to="{name: 'articlepage', params:{articleId: post.id, articleHtml: post.html}}">
+        <router-link :to="{name: 'pagearticle', params:{articleId: post.id, articleHtml: post.html}}">
           {{post.title}}
         </router-link>
       </li>
@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import VirtualDataServer from '@/temp/VirtualDataServer.vue';
-
 export default {
   name: 'pagepost',
 
@@ -24,7 +22,7 @@ export default {
   },
 
   components: {
-    VirtualDataServer,
+    
   },
 
   methods: {

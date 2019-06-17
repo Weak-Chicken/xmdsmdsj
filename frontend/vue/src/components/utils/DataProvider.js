@@ -26,6 +26,28 @@ export default {
         }
       }
     };
+
+    mountingPoint.getAllArticles = (succeeded) => {
+      if (succeeded) {
+        return {
+          "success": true,
+          "flag": "INFO_USER_LOGIN_SUCCEEDED",
+          "userData": {
+              "uuid": 1,
+              "userName": "Jon",
+              "userPwd": "12345",
+              "userEmail": "jon@233.com",
+              "userBio": "wahaha",
+              "userLevel": "User"
+          }
+        }
+      } else {
+        return {
+          "success": false,
+          "flag": "ERROR_NOT_LOGGED_IN"
+        }
+      }
+    };
     
   }
 };
