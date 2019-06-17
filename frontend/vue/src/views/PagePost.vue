@@ -1,9 +1,8 @@
 <template>
   <div class="pagePost">
-    <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
     <ol>
-      <li class="onePost" v-for="post in posts" v-bind:key="post.id">
-        <router-link :to="{name: 'pagearticle', params:{articleId: post.id, articleHtml: post.html}}">
+      <li class="onePost" v-for="post in posts" v-bind:key="post.article_id">
+        <router-link :to="{name: 'pagearticle', params:{articleId: post.article_id}}">
           {{post.title}}
         </router-link>
       </li>
@@ -26,10 +25,11 @@ export default {
   },
 
   methods: {
-    getPosts(allPosts) {
-      this.posts = allPosts;
-      // this.posts.reverse();
-    }
+
+  },
+
+  mounted() {
+    this.posts = this.$DataProvider.getAllArticlesPosts(true).articles;
   }
 }
 </script>

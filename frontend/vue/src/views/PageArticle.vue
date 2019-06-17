@@ -1,6 +1,5 @@
 <template>
   <div class="pageArticle">
-    <VirtualDataServer @get-all-posts="getPosts"></VirtualDataServer>
     <div v-html="topicPlaceHolder"></div>
   </div>
 </template>
@@ -20,9 +19,11 @@ export default {
   },
 
   methods: {
-    getPosts(allPosts) {
-      this.topicPlaceHolder = allPosts.filter(post => post.id == this.$route.params.articleId)[0].html;  
-    }
+    
+  },
+
+  created() {
+    this.topicPlaceHolder = this.$DataProvider.getArticlesById(true, this.$route.params.articleId).article.content;
   }
 }
 </script>
