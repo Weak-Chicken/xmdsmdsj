@@ -10,8 +10,8 @@ import vueAxios from 'vue-axios'
 axios.defaults.baseURL = process.env.VUE_APP_BACKEND_ADD
 Vue.use(vueAxios, axios)
 
+import DataProvider from '@/components/utils/DataProvider.js';
 if (process.env.NODE_ENV === 'development') {
-  import DataProvider from '@/components/utils/DataProvider.js';
   Vue.use(DataProvider)
 }
 

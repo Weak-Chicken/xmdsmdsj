@@ -3,11 +3,9 @@
  */
 export default {
   install(Vue, options){
-    let mountingPoint = Vue.prototype;
-    mountingPoint.DataProvider = {};
-    mountingPoint = mountingPoint.DataProvider;
+    let mountingPoint = Vue.prototype.$DataProvider = {};
 
-    mountingPoint.$userLogin = (succeeded) => {
+    mountingPoint.userLogin = (succeeded) => {
       if (succeeded) {
         return {
           "success": true,
