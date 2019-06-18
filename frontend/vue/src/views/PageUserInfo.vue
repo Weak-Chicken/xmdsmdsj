@@ -1,6 +1,6 @@
 <template>
   <div class="userInfo">
-    <h1>This page has not been finished yet</h1>
+    <h1>My Articles</h1>
     <p>I guess you are {{ userName }}</p>
   </div>
 </template>
