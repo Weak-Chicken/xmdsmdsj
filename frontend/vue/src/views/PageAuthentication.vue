@@ -79,7 +79,7 @@ export default {
   computed: {
     ...mapGetters ([
       'checkLogin',
-      'getUserName',
+      'getUserData',
     ]),
   },
   
@@ -110,7 +110,7 @@ export default {
 
         if (this.loginResults.success) {
           this.loggingIn(this.loginResults.userData);
-          this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserName}})
+          this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserData.userName}})
         } else {
           this.loginErrorMessage = ErrorCodes.getLoginErrorMessage(this.loginResults.flag);
         }

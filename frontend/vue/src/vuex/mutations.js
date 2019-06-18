@@ -1,11 +1,11 @@
 export default {
   LOGGING_IN(state, userData) {
     state.loggedIn = true;
-    state.userName = userData.userName;
+    state.userData = userData;
   },
 
-  LOGGING_OUT(state, userData) {
+  LOGGING_OUT(state) {
     state.loggedIn = false;
-    state.userName = '';
+    state.userData = {};
   },
 }

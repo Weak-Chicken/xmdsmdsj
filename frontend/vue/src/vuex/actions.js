@@ -3,7 +3,7 @@ export default {
     commit('LOGGING_IN', userData);
   },
 
-  loggingOut({ commit }, userData) {
-    commit('LOGGING_OUT', userData);
+  loggingOut({ commit }) {
+    commit('LOGGING_OUT');
   },
 }
