@@ -1,7 +1,7 @@
 <template>
   <div class="pageUpComing">
     <div class="test">
-      {{ envMode }}
+      <mavon-editor v-model="envMode" @save="saving"/>
     </div>
     <!-- <button @click="addHellows">Change</button> -->
     <!-- <p>Aloha!</p> -->
@@ -10,6 +10,8 @@
 
 <script>
 import DataProvider from '@/components/utils/DataProvider.js';
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 import { mapState } from 'vuex';
 import { mapActions } from 'vuex';
 
@@ -18,8 +20,12 @@ export default {
 
   data() {
     return {
-      envMode: process.env.VUE_APP_ENV_CODE
+      envMode: ''
     }
+  },
+
+  components: {
+    mavonEditor
   },
 
   // computed: {
@@ -28,12 +34,12 @@ export default {
   //   })
   // },
 
-  // methods: {
-  //   ...mapActions({
-  //     addHellows: 'addHellows',
-  //     addHellowsAlt: 'addHellowsAlt',
-  //   })
-  // },
+  methods: {
+    saving() {
+      console.log('saving is clicked')
+      console.log(this.envMode)
+    }
+  },
 }
 </script>
 
