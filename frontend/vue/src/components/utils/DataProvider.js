@@ -132,7 +132,6 @@ export default {
      */
     mountingPoint.getArticlesOfUser = (succeeded, user_id) => {
       if (succeeded) {
-        console.log(article_id);
         let fakeAllArticles = [
           {
             "article_id": "testArticleId0",
@@ -180,7 +179,6 @@ export default {
         }
       }
     };
-
 
   }
 };

@@ -1,21 +1,24 @@
 <template>
   <div class="pageArticle">
-    <div v-html="topicPlaceHolder"></div>
+    <mavon-editor v-html="articlePlaceHolder" :subfield="false" :defaultOpen="'preview'" :toolbarsFlag="false" :boxShadow="false"/>
   </div>
 </template>
 
 <script>
+import { mavonEditor } from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
+
 export default {
   name: 'pagearticle',
 
   data() {
     return {
-      topicPlaceHolder: '',
+      articlePlaceHolder: '',
     }
   },
 
   components: {
-    
+    mavonEditor
   },
 
   methods: {
@@ -23,7 +26,7 @@ export default {
   },
 
   created() {
-    this.topicPlaceHolder = this.$DataProvider.getArticlesById(true, this.$route.params.articleId).article.content;
+    this.articlePlaceHolder = this.$DataProvider.getArticlesById(true, this.$route.params.articleId).article.content;
   }
 }
 </script>
