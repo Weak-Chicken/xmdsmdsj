@@ -49,6 +49,14 @@ const router = new Router({
       meta: {
         requireAuthentication: true,
       }
+    },
+    {
+      path: 'editor/:userId/:articleTitle',
+      name: 'pageeditor',
+      component: () => import('@/views/PageEditor.vue'),
+      meta: {
+        requireAuthentication: true,
+      }
     }
   ]
 });

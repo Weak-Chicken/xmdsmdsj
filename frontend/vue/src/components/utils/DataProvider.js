@@ -170,7 +170,7 @@ export default {
 
         return {
           "success": true,
-          "articles": fakeAllArticles.filter(article => article.user_id == user_id)
+          "articles": fakeAllArticles.filter(article => article.user_id === user_id)
         }
       } else {
         return {
@@ -179,6 +179,13 @@ export default {
         }
       }
     };
+
+    /**
+     * Login is needed for this API
+     */
+    mountingPoint.createArticle = (article_content) => {
+      console.log(article_content);
+    }
 
   }
 };

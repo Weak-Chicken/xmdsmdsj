@@ -5,6 +5,8 @@
     </div>
     <div class="userArticle">
       <h3>My Articles</h3>
+      <button id="create" @click="createArticle">Add New</button>
+      <button id="select">Select</button>
       <PostArticles :articleFieldSelector="'loggedinuser'" :userId="this.userId"/>
     </div>
   </div>
@@ -18,12 +20,18 @@ export default {
 
   data() {
     return {
-      userId: this.$route.params.userId,
+      userId: this.$route.params.userId.toString(),
     }
   },
 
   components: {
     PostArticles
+  },
+
+  methods: {
+    createArticle() {
+      this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleTitle: 'Untitled'}});
+    }
   }
   
 }
