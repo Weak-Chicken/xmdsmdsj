@@ -5,6 +5,7 @@
         <router-link :to="{name: 'pagearticle', params:{articleId: articlePost.article_id}}">
           {{articlePost.title}}
         </router-link>
+        <input v-if="selectBox" v-model="selectedArticles" type="checkbox" v-bind:value="articlePost.article_id">
       </li>
     </ol>
   </div>
@@ -25,6 +26,11 @@ export default {
         ].indexOf(value.toLowerCase()) !== -1;
       }
     },
+    selectBox: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
     userId: {
       type: String,
       required: false,
@@ -39,6 +45,7 @@ export default {
     return {
       articlePosts: [],
       RetrieveMode: undefined,
+      selectedArticles: [],
     }
   },
 
@@ -68,6 +75,12 @@ export default {
     getLoggedInUsersArticles() {
       this.articlePosts = this.$DataProvider.getArticlesOfUser(true, this.userId).articles;
     }
+  },
+
+  watch: {
+		selectedArticles: function (val) {
+      this.$emit('sendingSelectedArticles', this.selectedArticles);
+		}
   },
 }
 </script>
