@@ -15,7 +15,7 @@ export default {
     return {
       articleContent: '',
       currentUser: this.$route.params.userId.toString(),
-      currentArticleTitle: this.$route.params.articleTitle,
+      currentArticleId: this.$route.params.articleId,
     }
   },
 
@@ -34,10 +34,10 @@ export default {
   },
 
   mounted() {
-    if (this.$route.params.article) {
-      this.articleContent = this.$route.params.article.content;
+    if (this.currentArticleId !== 'Untitled') {
+      this.articleContent = this.$DataProvider.getArticleById(true, this.currentArticleId).article.content;
     }
-  },
+  }
 }
 </script>
 

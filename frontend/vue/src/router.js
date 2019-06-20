@@ -51,7 +51,7 @@ const router = new Router({
       }
     },
     {
-      path: 'editor/:userId/:articleTitle',
+      path: 'editor/:userId/:articleId',
       name: 'pageeditor',
       component: () => import('@/views/PageEditor.vue'),
       meta: {

@@ -42,7 +42,7 @@ export default {
 
   methods: {
     createArticle() {
-      this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleTitle: 'Untitled'}});
+      this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleId: 'Untitled'}});
     },
 
     switchSelector() {
@@ -50,9 +50,7 @@ export default {
     },
 
     editArticle() {
-      let userId = this.$store.getters.getUserData.uuid;
-      let article = this.$DataProvider.getArticleById(true, this.selectedArticles[0]).article;
-      this.$router.push({name: 'pageeditor', params: {userId: userId, articleTitle: article.title, article: article}});
+      this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleId: this.selectedArticles[0]}});
     },
 
     cancelSwitch() {
