@@ -1,11 +1,18 @@
 <template>
   <div class="userInfo">
-    <h1>My Articles</h1>
-    <p>I guess you are {{ userName }}</p>
+    <div class="userIntro">
+      <p>user intro here</p>
+    </div>
+    <div class="userArticle">
+      <h3>My Articles</h3>
+      <PostArticles :articleFieldSelector="'loggedinuser'"/>
+    </div>
   </div>
 </template>
 
 <script>
+import PostArticles from '@/components/PostArticles.vue';
+
 export default {
   name: 'pageuserinfo',
 
@@ -13,10 +20,17 @@ export default {
     return {
       userName: this.$route.params.userName,
     }
+  },
+
+  components: {
+    PostArticles
   }
+  
 }
 </script>
 
 <style scoped>
-
+  .userIntro img {
+    height: 4rem;
+  }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="pagePost">
-    <PostArticles v-bind:articleFieldSelector="'ALL'"/>
+    <PostArticles :articleFieldSelector="'ALL'"/>
   </div>
 </template>
 

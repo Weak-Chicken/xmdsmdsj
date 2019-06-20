@@ -170,7 +170,7 @@ export default {
 
         return {
           "success": true,
-          "articles": fakeAllArticles.filter(article => article.user_id === user_id)
+          "articles": fakeAllArticles.filter(article => article.user_id == user_id)
         }
       } else {
         return {

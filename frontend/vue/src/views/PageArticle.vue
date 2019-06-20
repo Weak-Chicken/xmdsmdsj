@@ -27,7 +27,7 @@ export default {
 
   created() {
     this.articlePlaceHolder = this.$DataProvider.getArticlesById(true, this.$route.params.articleId).article.content;
-  }
+  },
 }
 </script>
 

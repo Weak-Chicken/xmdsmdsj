@@ -62,7 +62,8 @@ export default {
     },
 
     getLoggedInUsersArticles() {
-      this.articlePosts = this.$DataProvider.getAllArticlesPosts(true).articles;
+      console.log(this.$store.getters.getUserData.uuid)
+      this.articlePosts = this.$DataProvider.getArticlesOfUser(true, this.$store.getters.getUserData.uuid).articles;
     }
   },
 }
