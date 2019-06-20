@@ -7,7 +7,7 @@
       <h3>My Articles</h3>
       <button @click="createArticle">Add New</button>
       <button id="select" @click="switchSelector">Select</button>
-      <button v-if="selectMode">Edit</button>
+      <button v-if="selectMode" @click="editArticle" :disabled="editable">Edit</button>
       <button v-if="selectMode">Delete</button>
       <button v-if="selectMode">Confirm</button>
       <button v-if="selectMode" @click="cancelSwitch">Cancel</button>
@@ -34,6 +34,12 @@ export default {
     PostArticles
   },
 
+  computed: {
+    editable() {
+      return !(this.selectedArticles.length === 1);
+    }
+  },
+
   methods: {
     createArticle() {
       this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleTitle: 'Untitled'}});
@@ -41,6 +47,12 @@ export default {
 
     switchSelector() {
       this.selectMode = !this.selectMode;
+    },
+
+    editArticle() {
+      let userId = this.$store.getters.getUserData.uuid;
+      let article = this.$DataProvider.getArticleById(true, this.selectedArticles[0]).article;
+      this.$router.push({name: 'pageeditor', params: {userId: userId, articleTitle: article.title, article: article}});
     },
 
     cancelSwitch() {

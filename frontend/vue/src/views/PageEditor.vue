@@ -25,9 +25,19 @@ export default {
 
   methods: {
     saveArticle() {
-      this.$DataProvider.createArticle(this.articleContent);
+      if (!this.$route.params.article) {
+        this.$DataProvider.createArticle(this.articleContent);
+      } else {
+        this.$DataProvider.updateArticle(this.articleContent);
+      }
     }
-  }
+  },
+
+  mounted() {
+    if (this.$route.params.article) {
+      this.articleContent = this.$route.params.article.content;
+    }
+  },
 }
 </script>
 

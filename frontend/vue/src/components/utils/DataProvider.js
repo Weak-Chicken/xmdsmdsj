@@ -76,9 +76,8 @@ export default {
       }
     };
 
-    mountingPoint.getArticlesById = (succeeded, article_id) => {
+    mountingPoint.getArticleById = (succeeded, article_id) => {
       if (succeeded) {
-        console.log(article_id);
         let fakeAllArticles = [
           {
             "article_id": "testArticleId0",
@@ -184,8 +183,65 @@ export default {
      * Login is needed for this API
      */
     mountingPoint.createArticle = (article_content) => {
-      console.log(article_content);
-    }
+      console.log('createArticle', article_content);
+    };
+
+    /**
+     * Login is needed for this API
+     */
+    mountingPoint.updateArticle = (article_content) => {
+      console.log('updateArticle', article_content);
+    };
+
+    mountingPoint.getArticlesById = (succeeded, article_id) => {
+      if (succeeded) {
+        let fakeAllArticles = [
+          {
+            "article_id": "testArticleId0",
+            "user_id": "testUserId0",
+            "title": "Authentication System Part 1",
+            "created_at": "2019-05-02T04:32:09.537Z",
+            "last_modified_at": "2019-05-02T04:32:09.537Z",
+            "author": {
+              "userName": "Jon",
+            },
+            "content": fakeArticle0,
+          },
+          {
+            "article_id": "testArticleId1",
+            "user_id": "testUserId1",
+            "title": "Authentication System Part 2",
+            "created_at": "2019-05-02T04:32:09.537Z",
+            "last_modified_at": "2019-05-02T04:32:09.537Z",
+            "author": {
+              "userName": "Jon",
+            },
+            "content": fakeArticle1,
+          },
+          {
+            "article_id": "testArticleId2",
+            "user_id": "testUserId2",
+            "title": "Run Our Web",
+            "created_at": "2019-05-02T04:32:09.537Z",
+            "last_modified_at": "2019-05-02T04:32:09.537Z",
+            "author": {
+              "userName": "Jon",
+            },
+            "content": fakeArticle2,
+          }
+        ];
+
+        return {
+          "success": true,
+          "articles": fakeAllArticles.filter(article => article.article_id === article_id)
+        }
+      } else {
+        return {
+          "success": false,
+          "flag": "ERROR_NOT_LOGGED_IN"
+        }
+      }
+    };
 
   }
 };
