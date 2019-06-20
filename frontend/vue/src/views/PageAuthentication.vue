@@ -110,7 +110,7 @@ export default {
 
         if (this.loginResults.success) {
           this.loggingIn(this.loginResults.userData);
-          this.$router.push({name: 'pageuserinfo', params: {userName: this.$store.getters.getUserData.userName}})
+          this.$router.push({name: 'pageuserinfo', params: {userId: this.$store.getters.getUserData.uuid}})
         } else {
           this.loginErrorMessage = ErrorCodes.getLoginErrorMessage(this.loginResults.flag);
         }

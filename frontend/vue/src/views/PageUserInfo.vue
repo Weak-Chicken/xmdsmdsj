@@ -5,7 +5,7 @@
     </div>
     <div class="userArticle">
       <h3>My Articles</h3>
-      <PostArticles :articleFieldSelector="'loggedinuser'"/>
+      <PostArticles :articleFieldSelector="'loggedinuser'" :userId="this.userId"/>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
 
   data() {
     return {
-      userName: this.$route.params.userName,
+      userId: this.$route.params.userId,
     }
   },
 

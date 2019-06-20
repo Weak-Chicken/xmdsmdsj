@@ -24,6 +24,10 @@ export default {
           'loggedinuser',
         ].indexOf(value.toLowerCase()) !== -1;
       }
+    },
+    userId: {
+      type: String,
+      required: false,
     }
   },
 
@@ -63,7 +67,7 @@ export default {
 
     getLoggedInUsersArticles() {
       console.log(this.$store.getters.getUserData.uuid)
-      this.articlePosts = this.$DataProvider.getArticlesOfUser(true, this.$store.getters.getUserData.uuid).articles;
+      this.articlePosts = this.$DataProvider.getArticlesOfUser(true, this.userId).articles;
     }
   },
 }

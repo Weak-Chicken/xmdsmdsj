@@ -43,7 +43,7 @@ const router = new Router({
       component: () => import('@/views/PageAuthentication.vue'),
     },
     {
-      path: '/user/:userName',
+      path: '/user/:userId',
       name: 'pageuserinfo',
       component: () => import('@/views/PageUserInfo.vue'),
       meta: {
