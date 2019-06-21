@@ -34,6 +34,10 @@ export default {
     userId: {
       type: String,
       required: false,
+    },
+    removeArticleIds: {
+      type: Array,
+      required: false,
     }
   },
 
@@ -80,7 +84,15 @@ export default {
   watch: {
 		selectedArticles: function (val) {
       this.$emit('sendingSelectedArticles', this.selectedArticles);
-		}
+    },
+    
+    removeArticleIds: function (val) {
+      if (this.removeArticleIds.length !== 0) {
+        this.articlePosts = this.articlePosts.filter(article => this.removeArticleIds.indexOf(article.article_id) === -1);
+        this.selectedArticles = [];
+        this.$emit('removeArticlesFinished');
+      }
+    },
   },
 }
 </script>

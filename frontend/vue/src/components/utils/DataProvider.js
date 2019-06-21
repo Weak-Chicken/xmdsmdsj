@@ -243,5 +243,12 @@ export default {
       }
     };
 
+    /**
+     * Login is needed for this API
+     */
+    mountingPoint.deleteArticle = (article_ids) => {
+      console.log('deleteArticle', article_ids);
+    };
+
   }
 };

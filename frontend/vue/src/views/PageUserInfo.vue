@@ -8,10 +8,16 @@
       <button @click="createArticle">Add New</button>
       <button id="select" @click="switchSelector">Select</button>
       <button v-if="selectMode" @click="editArticle" :disabled="editable">Edit</button>
-      <button v-if="selectMode">Delete</button>
-      <button v-if="selectMode">Confirm</button>
+      <button v-if="selectMode" @click="deleteArticle">Delete</button>
       <button v-if="selectMode" @click="cancelSwitch">Cancel</button>
-      <PostArticles :articleFieldSelector="'loggedinuser'" :userId="userId" :selectBox="selectMode" @sendingSelectedArticles="receivingSelectedArticles"/>
+      <PostArticles 
+        :articleFieldSelector="'loggedinuser'"
+        :userId="userId"
+        :selectBox="selectMode"
+        :removeArticleIds="removeArticleIds"
+        @sendingSelectedArticles="onSendingSelectedArticles"
+        @removeArticlesFinished="onRemoveArticlesFinished">
+      </PostArticles>
     </div>
   </div>
 </template>
@@ -27,6 +33,7 @@ export default {
       userId: this.$route.params.userId.toString(),
       selectMode: false,
       selectedArticles: [],
+      removeArticleIds: [],
     }
   },
 
@@ -37,6 +44,10 @@ export default {
   computed: {
     editable() {
       return !(this.selectedArticles.length === 1);
+    },
+
+    deletable() {
+      return !(this.selectedArticles.length > 0);
     }
   },
 
@@ -53,12 +64,21 @@ export default {
       this.$router.push({name: 'pageeditor', params: {userId: this.$store.getters.getUserData.uuid, articleId: this.selectedArticles[0]}});
     },
 
+    deleteArticle() {
+      this.$DataProvider.deleteArticle(this.selectedArticles);
+      this.removeArticleIds = this.selectedArticles;
+    },
+
     cancelSwitch() {
       this.selectMode = false;
     },
 
-    receivingSelectedArticles(selectedArticles) {
+    onRemoveArticlesFinished(selectedArticles) {
       this.selectedArticles = selectedArticles;
+    },
+
+    onResetRemoveArticleIds() {
+      this.removeArticleIds = [];
     }
   }
   
