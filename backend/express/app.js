@@ -1,19 +1,19 @@
-let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let session = require('express-session');
-let logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const logger = require('morgan');
 
-let indexRouter = require('./routes/index');
-let userRouter = require('./routes/apis/v1/User');
+const indexRouter = require('./routes/index');
+const userRouter = require('./routes/apis/v1/User');
 // var testRouter = require('./routes/test');
 
-let app = express();
+const app = express();
 
-let cookieEncryptionToken = require('./.secret.js').cookieEncryptionToken;
-let sessionEncryptionToken = require('./.secret.js').sessionEncryptionToken;
-let frontendAddress = require('./.secret.js').frontendAddress;
+const cookieEncryptionToken = require('./.secret.js').cookieEncryptionToken;
+const sessionEncryptionToken = require('./.secret.js').sessionEncryptionToken;
+const frontendAddress = require('./.secret.js').frontendAddress;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

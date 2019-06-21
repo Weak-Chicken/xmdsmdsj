@@ -1,20 +1,20 @@
 // Use express module
-let express = require('express');
-let multipart = require('connect-multiparty');
-let router = express.Router();
+const express = require('express');
+const multipart = require('connect-multiparty');
+const router = express.Router();
 
 // Use SQL modules with our configs
-let mysql = require('mysql');
-let mysqlConfig = require('../../../db/sql/sqlConfigs');
-let mysqlUserOp = require('../../../db/sql/userSqlOp');
-let flags = require('../../__flags__');
-let supportCommunicationMethods = require('./__communicationSupport__');
+const mysql = require('mysql');
+const mysqlConfig = require('../../../db/sql/sqlConfigs');
+const mysqlUserOp = require('../../../db/sql/userSqlOp');
+const flags = require('../../__flags__');
+const supportCommunicationMethods = require('./__communicationSupport__');
 
-let multipartMiddleware = multipart();
-let flagCode = flags.flags();
+const multipartMiddleware = multipart();
+const flagCode = flags.flags();
 
 // Build a connection pool for sql connection
-let mysqlPool = mysql.createPool(mysqlConfig.mysql);
+const mysqlPool = mysql.createPool(mysqlConfig.mysql);
 
 
 // User login
