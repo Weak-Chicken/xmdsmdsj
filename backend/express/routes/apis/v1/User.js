@@ -10,12 +10,11 @@ const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const flags = require('../../__flags__');
 const supportCommunicationMethods = require('./__communicationSupport__');
 
-const multipartMiddleware = multipart();
-const flagCode = flags.flags();
-
 // Build a connection pool for sql connection
 const mysqlPool = mysql.createPool(mysqlConfig.mysql);
 
+const multipartMiddleware = multipart();
+const flagCode = flags.flags();
 
 // User login
 // DO NOT use 'get' here. Use 'post' to secure user's password.
@@ -32,7 +31,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
     ] = [
         req.body.userName,
         req.body.userPwd,
-      ];
+    ];
 
     connection.query(mysqlUserOp.getUserByName, [userName], (error, results, fields) => {
       if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
