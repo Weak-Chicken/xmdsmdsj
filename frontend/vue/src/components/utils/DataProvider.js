@@ -15,10 +15,8 @@ export default {
           "success": true,
           "flag": "INFO_USER_LOGIN_SUCCEEDED",
           "userData": {
-              "uuid": 1,
+              "uuid": "1",
               "userName": "Jon",
-              "userPwd": "12345",
-              "userEmail": "jon@233.com",
               "userBio": "wahaha",
               "userLevel": "User"
           }
@@ -38,32 +36,38 @@ export default {
           "articles": [
             {
               "article_id": "testArticleId0",
-              "user_id": "testUserId0",
               "title": "Authentication System Part 1",
               "created_at": "2019-05-02T04:32:09.537Z",
               "last_modified_at": "2019-05-02T04:32:09.537Z",
               "author": {
+                "uuid": "1",
                 "userName": "Jon",
+                "userBio": "wahaha",
+                "userLevel": "User"
               },
             },
             {
               "article_id": "testArticleId1",
-              "user_id": "testUserId1",
               "title": "Authentication System Part 2",
               "created_at": "2019-05-02T04:32:09.537Z",
               "last_modified_at": "2019-05-02T04:32:09.537Z",
               "author": {
+                "uuid": "1",
                 "userName": "Jon",
+                "userBio": "wahaha",
+                "userLevel": "User"
               },
             },
             {
               "article_id": "testArticleId2",
-              "user_id": "testUserId2",
               "title": "Run Our Web",
               "created_at": "2019-05-02T04:32:09.537Z",
               "last_modified_at": "2019-05-02T04:32:09.537Z",
               "author": {
-                "userName": "Jon",
+                "uuid": "2",
+                "userName": "Jon2",
+                "userBio": "wahaha",
+                "userLevel": "User"
               },
             }
           ]
@@ -81,34 +85,40 @@ export default {
         let fakeAllArticles = [
           {
             "article_id": "testArticleId0",
-            "user_id": "testUserId0",
             "title": "Authentication System Part 1",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle0,
           },
           {
             "article_id": "testArticleId1",
-            "user_id": "testUserId1",
             "title": "Authentication System Part 2",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle1,
           },
           {
             "article_id": "testArticleId2",
-            "user_id": "testUserId2",
             "title": "Run Our Web",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
-              "userName": "Jon",
+              "uuid": "2",
+              "userName": "Jon2",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle2,
           }
@@ -134,34 +144,40 @@ export default {
         let fakeAllArticles = [
           {
             "article_id": "testArticleId0",
-            "user_id": "1",
             "title": "Authentication System Part 1",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle0,
           },
           {
             "article_id": "testArticleId1",
-            "user_id": "1",
             "title": "Authentication System Part 2",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle1,
           },
           {
             "article_id": "testArticleId2",
-            "user_id": "2",
             "title": "Run Our Web",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "2",
               "userName": "Jon2",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle2,
           }
@@ -169,7 +185,7 @@ export default {
 
         return {
           "success": true,
-          "articles": fakeAllArticles.filter(article => article.user_id === user_id)
+          "articles": fakeAllArticles.filter(article => article.author.uuid === user_id)
         }
       } else {
         return {
@@ -198,34 +214,40 @@ export default {
         let fakeAllArticles = [
           {
             "article_id": "testArticleId0",
-            "user_id": "testUserId0",
             "title": "Authentication System Part 1",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle0,
           },
           {
             "article_id": "testArticleId1",
-            "user_id": "testUserId1",
             "title": "Authentication System Part 2",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
+              "uuid": "1",
               "userName": "Jon",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle1,
           },
           {
             "article_id": "testArticleId2",
-            "user_id": "testUserId2",
             "title": "Run Our Web",
             "created_at": "2019-05-02T04:32:09.537Z",
             "last_modified_at": "2019-05-02T04:32:09.537Z",
             "author": {
-              "userName": "Jon",
+              "uuid": "2",
+              "userName": "Jon2",
+              "userBio": "wahaha",
+              "userLevel": "User"
             },
             "content": fakeArticle2,
           }

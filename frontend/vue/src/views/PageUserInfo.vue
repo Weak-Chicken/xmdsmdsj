@@ -73,11 +73,11 @@ export default {
       this.selectMode = false;
     },
 
-    onRemoveArticlesFinished(selectedArticles) {
+    onSendingSelectedArticles(selectedArticles) {
       this.selectedArticles = selectedArticles;
     },
 
-    onResetRemoveArticleIds() {
+    onRemoveArticlesFinished() {
       this.removeArticleIds = [];
     }
   }
