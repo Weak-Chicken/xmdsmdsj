@@ -1,5 +1,8 @@
-let flags = require('../../__flags__');
-let flagCode = flags.flags();
+const flags = require('../../__flags__');
+const flagCode = flags.flags();
+
+const mysqlUserOp = require('../../../db/sql/userSqlOp');
+const mysqlArticleOp = require('../../../db/sql/articleSqlOp');
 
 module.exports = {
   /**
@@ -10,7 +13,7 @@ module.exports = {
    * @param {*} next 
    */
   blockLogin(blockFlag, req, res, next) {
-    let checkMode = (blockFlag.toUpperCase() === 'login') ? true : false;
+    let checkMode = (blockFlag.toUpperCase() === 'LOGIN') ? true : false;
 
     if (checkMode) {
       if (req.session.logIn) {
@@ -57,6 +60,13 @@ module.exports = {
     // Release the connection
     // connection.release(); // might not work
     mysqlPool.releaseConnection(connection);
+  },
+
+  getLoggedInUserData(req, connection) {
+    connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
+      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      return results;
+    });
   },
 
 };

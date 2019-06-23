@@ -8,7 +8,7 @@ const mysql = require('mysql');
 const mysqlConfig = require('../../../db/sql/sqlConfigs');
 const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const flags = require('../../__flags__');
-const supportCommunicationMethods = require('./__communicationSupport__');
+const supportCommunicationMethods = require('./__sqlOpSupport__');
 
 // Build a connection pool for sql connection
 const mysqlPool = mysql.createPool(mysqlConfig.mysql);
@@ -46,13 +46,13 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
       }
 
       results = results[0]
-      let sentData;
+      let sendData;
 
       if (results.userName == userName && results.userPwd == userPwd) {
         req.session.logIn = true;
         req.session.logInUser = results.uuid;
 
-        sentData = {
+        sendData = {
           'success': true,
           'flag': flagCode.INFO_USER_LOGIN_SUCCEEDED,
           'userData': results,
@@ -60,24 +60,24 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
       } else {
         res.status(401);
         if (results.userName != userName) {
-          sentData = {
+          sendData = {
             'success': false,
             'flag': flagCode.ERROR_USER_NAME_WRONG
           };
         } else if (results.userPwd != userPwd) {
-          sentData = {
+          sendData = {
             'success': false,
             'flag': flagCode.ERROR_USER_PASSWORD_WRONG
           };
         } else {
-          sentData = {
+          sendData = {
             'success': false,
             'flag': flagCode.ERROR_USER_PASSWORD_WRONG
           };
         }
       }
 
-      supportCommunicationMethods.sendAndCloseConnection(res, mysqlPool, connection, sentData);
+      supportCommunicationMethods.sendAndCloseConnection(res, mysqlPool, connection, sendData);
     });
   });
 });
