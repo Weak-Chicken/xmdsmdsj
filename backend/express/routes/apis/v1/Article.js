@@ -23,6 +23,15 @@ router.get('/postall', (req, res, next) => {
   mysqlPool.getConnection((err, connection) => {
     if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
 
+  });
+});
+
+router.get('/postall', multipartMiddleware, (req, res, next) => {
+  if (!supportCommunicationMethods.blockLogin('NOT_LOGIN', req, res, next)) return;
+
+  // Get connection from connection pool
+  mysqlPool.getConnection((err, connection) => {
+    if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
 
   });
 });

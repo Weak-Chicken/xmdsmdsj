@@ -28,7 +28,7 @@ User login
 
 ### /article
 
-#### GET /article/postall
+#### GET /article/
 *In article API, prefix 'post' means obtain abstract of articles*
 Get all articles abstract infomation
 ##### input
@@ -67,7 +67,7 @@ Get all articles abstract infomation
 > }
 > ```
 
-#### GET /article/get_article_by_id/
+#### GET /article/article/
 ##### LOGIN NEEDED
 Get *ONE* article by its id.
 ##### input
@@ -99,7 +99,7 @@ Get *ONE* article by its id.
 > }
 > ```
 
-#### GET /article/get_articles_by_id/
+#### GET /article/articles/
 ##### LOGIN NEEDED
 Get *A List of* articles by their ids.
 ##### input
@@ -139,7 +139,7 @@ Get *A List of* articles by their ids.
 > }
 > ```
 
-#### GET /article/get_articles_by_user/
+#### GET /article/byUser/
 ##### LOGIN NEEDED
 Get all articles published by one certain user.
 ##### input
@@ -179,7 +179,7 @@ Get all articles published by one certain user.
 > }
 > ```
 
-#### POST /article/creat_new_article/
+#### POST /article/create/
 ##### LOGIN NEEDED
 Create a new article under a certain logged in user.
 ##### input
@@ -213,7 +213,7 @@ Create a new article under a certain logged in user.
 > }
 > ```
 
-#### POST /article/update_article/
+#### PUT /article/update/
 ##### LOGIN NEEDED
 Update an exsited article under a certain logged in user.
 ##### input
@@ -248,7 +248,42 @@ Update an exsited article under a certain logged in user.
 > }
 > ```
 
-#### POST /article/delete_article/
+#### PATCH /article/update/
+##### LOGIN NEEDED
+Update *Partially* an exsited article under a certain logged in user.
+##### input
+> ```json
+> {
+>   "article_id": "id of the article to be updated",
+>   "title": "title of article",
+>   "content": "content of article, in md format",
+> }
+> ```
+
+##### output
+> ```json
+> {
+>   "success": true or false,
+>   "flag": flag,
+>   "article" (if success): 
+>     {
+>       "article_id": "article's id",
+>       "title": "article title",
+>       "created_at": "time of creation",
+>       "last_modified_at": "time of last modified",
+>       "author": {
+>         (The same of "userData" of the response of /user/login API)
+>         "uuid": "author's id",
+>         "userName": "author's name",
+>         "userBio": "author's bio",
+>         "userLevel": "User" / "admin" / "SuperAdmin",
+>       },
+>       "content": "content of article in .md format",
+>      }
+> }
+> ```
+
+#### DELETE /article/delete/
 ##### LOGIN NEEDED
 Delete an exsited article under a certain logged in user.
 ##### input

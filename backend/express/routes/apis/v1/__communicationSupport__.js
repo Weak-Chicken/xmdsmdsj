@@ -9,8 +9,8 @@ module.exports = {
    * @param {*} res 
    * @param {*} next 
    */
-  checkLogin(blockFlag, req, res, next) {
-    let checkMode = (blockFlag.toLowerCase() === 'login') ? true : false;
+  blockLogin(blockFlag, req, res, next) {
+    let checkMode = (blockFlag.toUpperCase() === 'login') ? true : false;
 
     if (checkMode) {
       if (req.session.logIn) {

@@ -19,7 +19,7 @@ const flagCode = flags.flags();
 // User login
 // DO NOT use 'get' here. Use 'post' to secure user's password.
 router.post('/login', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('Login', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('LOGIN', req, res, next)) return;
 
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
@@ -86,7 +86,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
 // User register
 // DO NOT use 'get' here. Use 'post' to secure user's password.
 router.post('/register', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('Login', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('LOGIN', req, res, next)) return;
 
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
@@ -120,7 +120,7 @@ router.post('/register', multipartMiddleware, (req, res, next) => {
 
 
 router.post('/getUserById', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('NOT_LOGIN', req, res, next)) return;
 
   let uuid = parseInt(req.body.uuid);
 
@@ -141,7 +141,7 @@ router.post('/getUserById', multipartMiddleware, (req, res, next) => {
 
 
 router.post('/listUsers', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('NOT_LOGIN', req, res, next)) return;
 
   mysqlPool.getConnection((err, connection) => {
     if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
@@ -160,7 +160,7 @@ router.post('/listUsers', multipartMiddleware, (req, res, next) => {
 
 
 router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('NOT_LOGIN', req, res, next)) return;
 
   mysqlPool.getConnection((err, connection) => {
     if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
@@ -187,7 +187,7 @@ router.post('/getUserDetailsById', multipartMiddleware, (req, res, next) => {
 
 
 router.post('/listUsersDetails', multipartMiddleware, (req, res, next) => {
-  if (!supportCommunicationMethods.checkLogin('NotLogin', req, res, next)) return;
+  if (!supportCommunicationMethods.blockLogin('NOT_LOGIN', req, res, next)) return;
 
   mysqlPool.getConnection((err, connection) => {
     if (!supportCommunicationMethods.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
