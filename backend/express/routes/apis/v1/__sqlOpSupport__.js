@@ -4,8 +4,6 @@ const flagCode = flags.flags();
 const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const mysqlArticleOp = require('../../../db/sql/articleSqlOp');
 
-
-
 function blockLogin(blockFlag, req, res, next) {
   let checkMode = (blockFlag.toUpperCase() === 'LOGIN') ? true : false;
 
@@ -65,9 +63,29 @@ function getLoggedInUserData(req, mysqlPool, connection) {
   })
 }
 
+function getUserDataById(req, mysqlPool, connection, userId) {
+  return new Promise ((resolve) => {
+    connection.query(mysqlUserOp.getUserById, [userId], (error, results, fields) => {
+      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      resolve(results);
+    });
+  })
+}
+
+function getArticleDataById(req, mysqlPool, connection, articleId) {
+  return new Promise ((resolve) => {
+    connection.query(mysqlArticleOp.queryById, [articleId], (error, results, fields) => {
+      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      resolve(results);
+    });
+  })
+}
+
 module.exports = {
   blockLogin,
   checkSQLConnection,
   sendAndCloseConnection,
   getLoggedInUserData,
+  getUserDataById,
+  getArticleDataById,
 };

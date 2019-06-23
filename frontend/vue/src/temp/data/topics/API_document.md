@@ -179,7 +179,7 @@ Get all articles published by one certain user.
 > }
 > ```
 
-#### POST /article/create/
+#### POST /article/
 ##### LOGIN NEEDED
 Create a new article under a certain logged in user.
 ##### input
@@ -213,7 +213,7 @@ Create a new article under a certain logged in user.
 > }
 > ```
 
-#### PUT /article/update/
+#### PUT /article/id/
 ##### LOGIN NEEDED
 Update an exsited article under a certain logged in user.
 ##### input
@@ -248,7 +248,7 @@ Update an exsited article under a certain logged in user.
 > }
 > ```
 
-#### PATCH /article/update/
+#### PATCH /article/id/
 ##### LOGIN NEEDED
 Update *Partially* an exsited article under a certain logged in user.
 ##### input
@@ -283,7 +283,7 @@ Update *Partially* an exsited article under a certain logged in user.
 > }
 > ```
 
-#### DELETE /article/delete/
+#### DELETE /article/id/
 ##### LOGIN NEEDED
 Delete an exsited article under a certain logged in user.
 ##### input
