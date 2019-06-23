@@ -33,7 +33,7 @@ router.post('/login', multipartMiddleware, (req, res, next) => {
         req.body.userPwd,
     ];
 
-    connection.query(mysqlUserOp.getUserByName, [userName], (error, results, fields) => {
+    connection.query(mysqlUserOp.getUserByNameWithPassword, [userName], (error, results, fields) => {
       if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
       
       if (results.length === 0) { // TODO: improve here!
