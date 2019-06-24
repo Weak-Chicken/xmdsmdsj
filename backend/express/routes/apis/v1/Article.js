@@ -43,7 +43,7 @@ router.post('/', multipartMiddleware, (req, res, next) => {
       req.body.title,
       req.session.logInUser,
       req.body.content,
-    ]
+    ];
 
     let sendData;
     let userData = await supportCommunicationMethods.getLoggedInUserData(req, mysqlPool, connection);
@@ -81,35 +81,57 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
     let inputInfo = [
       article_id,
       title,
-      author_id,
+      user_id,
       content,
     ] = [
       req.body.article_id,
       req.body.title,
       req.session.logInUser,
       req.body.content,
-    ]
+    ];
 
     let sendData;
     let articleData = await supportCommunicationMethods.getArticleDataById(req, mysqlPool, connection, article_id);
-    console.log(articleData[0].author_id);
-    let userData = await supportCommunicationMethods.getUserDataById(req, mysqlPool, connection, articleData[0].author_id);
+    articleData = articleData[0];
 
-    console.log({
-      'inputInfo': inputInfo,
-      'authorData': userData,
-      'articleData': articleData,
-    });
+    // If the given article id is not existed, reject operation
+    if (articleData === undefined) {
+      sendData = {
+        'success': false,
+        'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+      }
+    } else {
+      let userData = await supportCommunicationMethods.getUserDataById(req, mysqlPool, connection, articleData.author_id);
+      userData = userData[0]
 
-    res.send({
-      'inputInfo': inputInfo,
-      'authorData': userData,
-      'articleData': articleData,
-    })
+      // If the user is not the author of the article, reject operation
+      if (userData.uuid !== user_id) {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_NOT_AUTHORIZED,
+        }
+      } else {
+        // Operate database, update value
+        connection.query(mysqlArticleOp.updateById, [title, content, article_id], (error, results, fields) => {
+          if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+        });
 
-    // connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
-    //   if (!supportCommunicationMethods.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
-    // });
+        // Obtain opertaion results
+        articleData = await supportCommunicationMethods.getArticleDataById(req, mysqlPool, connection, article_id);
+        articleData = articleData[0];
+        sendData = {
+          'article': {
+            'article_id': articleData.article_id,
+            'title': articleData.title,
+            'created_at': articleData.created_at,
+            'last_modified_at': articleData.last_modified_at,
+            'author': userData,
+            'content': articleData.content,
+          },
+        };
+      }
+    }
+    supportCommunicationMethods.sendAndCloseConnection(res, mysqlPool, connection, sendData);
   });
 });
 

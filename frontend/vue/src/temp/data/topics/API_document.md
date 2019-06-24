@@ -67,7 +67,7 @@ Get all articles abstract infomation
 > }
 > ```
 
-#### GET /article/article/
+#### GET /article/id/
 ##### LOGIN NEEDED
 Get *ONE* article by its id.
 ##### input
@@ -99,7 +99,7 @@ Get *ONE* article by its id.
 > }
 > ```
 
-#### GET /article/articles/
+#### GET /article/ids/
 ##### LOGIN NEEDED
 Get *A List of* articles by their ids.
 ##### input
@@ -139,7 +139,7 @@ Get *A List of* articles by their ids.
 > }
 > ```
 
-#### GET /article/byUser/
+#### GET /article/user/
 ##### LOGIN NEEDED
 Get all articles published by one certain user.
 ##### input
