@@ -24,62 +24,66 @@ router.post('/login', multipartMiddleware, async (req, res, next) => {
   if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
-  mysqlPool.getConnection((err, connection) => {
-    if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+  mysqlPool.getConnection(async (err, connection) => {
+    try {
+      await sqlOpSupport.verifySQLConnectionError(routerInfo, err);
 
-    let [
-      userName,
-      userPwd,
-    ] = [
-        req.body.userName,
-        req.body.userPwd,
-    ];
-
-    connection.query(mysqlUserOp.getUserByNameWithPassword, [userName], (error, results, fields) => {
-      if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
-      
-      if (results.length === 0) { // TODO: improve here!
-        res.status(401);
-        res.send({
-          'success': false,
-          'flag': flagCode.ERROR_USER_NOT_FOUND
-        });
-        return;
-      }
-
-      results = results[0]
-      let sendData;
-
-      if (results.userName == userName && results.userPwd == userPwd) {
-        req.session.logIn = true;
-        req.session.logInUser = results.uuid;
-
-        sendData = {
-          'success': true,
-          'flag': flagCode.INFO_USER_LOGIN_SUCCEEDED,
-          'userData': results,
-        };
-      } else {
-        res.status(401);
-        if (results.userName != userName) {
-          sendData = {
+      let [
+        userName,
+        userPwd,
+      ] = [
+          req.body.userName,
+          req.body.userPwd,
+      ];
+  
+      connection.query(mysqlUserOp.getUserByNameWithPassword, [userName], (error, results, fields) => {
+        if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
+        
+        if (results.length === 0) { // TODO: improve here!
+          res.status(401);
+          res.send({
             'success': false,
-            'flag': flagCode.ERROR_USER_NAME_WRONG
-          };
-        } else if (results.userPwd != userPwd) {
+            'flag': flagCode.ERROR_USER_NOT_FOUND
+          });
+          return;
+        }
+  
+        results = results[0]
+        let sendData;
+  
+        if (results.userName == userName && results.userPwd == userPwd) {
+          req.session.logIn = true;
+          req.session.logInUser = results.uuid;
+  
           sendData = {
-            'success': false,
-            'flag': flagCode.ERROR_USER_PASSWORD_WRONG
+            'success': true,
+            'flag': flagCode.INFO_USER_LOGIN_SUCCEEDED,
+            'userData': results,
           };
         } else {
-          sendData = {
-            'success': false,
-            'flag': flagCode.ERROR_USER_PASSWORD_WRONG
-          };
+          res.status(401);
+          if (results.userName != userName) {
+            sendData = {
+              'success': false,
+              'flag': flagCode.ERROR_USER_NAME_WRONG
+            };
+          } else if (results.userPwd != userPwd) {
+            sendData = {
+              'success': false,
+              'flag': flagCode.ERROR_USER_PASSWORD_WRONG
+            };
+          } else {
+            sendData = {
+              'success': false,
+              'flag': flagCode.ERROR_USER_PASSWORD_WRONG
+            };
+          }
         }
-      }
-      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-    });
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 

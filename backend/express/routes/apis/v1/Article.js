@@ -34,7 +34,7 @@ router.post('/', multipartMiddleware, (req, res, next) => {
   // Get connection from connection pool
   mysqlPool.getConnection(async (err, connection) => {
     try {
-      if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+      sqlOpSupport.verifySQLConnectionError(routerInfo, err);
 
       let inputInfo = [
         article_id,
@@ -42,15 +42,14 @@ router.post('/', multipartMiddleware, (req, res, next) => {
         author_id,
         content,
       ] = [
-        // uuidv1(),
-        'fixed_uuid_for_testing',
+        uuidv1(),
         req.body.title,
         req.session.logInUser,
         req.body.content,
       ];
   
       let sendData;
-      let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, mysqlPool, connection);
+      let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, connection);
   
       await new Promise ((resolve, reject) => {
         connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
@@ -82,36 +81,42 @@ router.post('/', multipartMiddleware, (req, res, next) => {
 });
 
 router.put('/id', multipartMiddleware, (req, res, next) => {
-  if (!sqlOpSupport.verifyLogin('NOT_LOGIN', req, res, next)) return;
+  let routerInfo = [req, res, next];
+  let blockUsers = 'NOT_LOGIN';
+  if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
   mysqlPool.getConnection(async (err, connection) => {
-    if (!sqlOpSupport.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
+    try {
+      sqlOpSupport.verifySQLConnectionError(routerInfo, err);
 
-    let inputInfo = [
-      article_id,
-      title,
-      user_id,
-      content,
-    ] = [
-      req.body.article_id,
-      req.body.title,
-      req.session.logInUser,
-      req.body.content,
-    ];
-
-    let sendData;
-    let articleData = await sqlOpSupport.getArticleDataById(req, mysqlPool, connection, article_id);
-    articleData = articleData[0];
-
-    // If the given article id is not existed, reject operation
-    if (articleData === undefined) {
-      sendData = {
-        'success': false,
-        'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+      let inputInfo = [
+        article_id,
+        title,
+        user_id,
+        content,
+      ] = [
+        req.body.article_id,
+        req.body.title,
+        req.session.logInUser,
+        req.body.content,
+      ];
+  
+      let sendData;
+      let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      articleData = articleData[0];
+  
+      // If the given article id is not existed, reject operation
+      if (articleData === undefined) {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+        }
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
       }
-    } else {
-      let userData = await sqlOpSupport.getUserDataById(req, mysqlPool, connection, articleData.author_id);
+
+      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData.author_id);
       userData = userData[0]
 
       // If the user is not the author of the article, reject operation
@@ -120,28 +125,163 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
           'success': false,
           'flag': flagCode.ERROR_NOT_AUTHORIZED,
         }
-      } else {
-        // Operate database, update value
-        connection.query(mysqlArticleOp.updateById, [title, content, article_id], (error, results, fields) => {
-          if (!sqlOpSupport.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
-        });
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
+      } 
 
-        // Obtain opertaion results
-        articleData = await sqlOpSupport.getArticleDataById(req, mysqlPool, connection, article_id);
-        articleData = articleData[0];
-        sendData = {
-          'article': {
-            'article_id': articleData.article_id,
-            'title': articleData.title,
-            'created_at': articleData.created_at,
-            'last_modified_at': articleData.last_modified_at,
-            'author': userData,
-            'content': articleData.content,
-          },
-        };
-      }
+      // Operate database, update value
+      await new Promise ((resolve, reject) => {
+        connection.query(mysqlArticleOp.updateById, [title, content, article_id], (error, results, fields) => {
+          if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); reject(error); };
+          resolve(results);
+        });
+      });
+
+      // Obtain opertaion results
+      articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      articleData = articleData[0];
+      sendData = {
+        'article': {
+          'article_id': articleData.article_id,
+          'title': articleData.title,
+          'created_at': articleData.created_at,
+          'last_modified_at': articleData.last_modified_at,
+          'author': userData,
+          'content': articleData.content,
+        },
+      };
+
+      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+    } catch (error) {
+      console.log(error)
     }
-    sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+  });
+});
+
+router.patch('/id', multipartMiddleware, (req, res, next) => {
+  let routerInfo = [req, res, next];
+  let blockUsers = 'NOT_LOGIN';
+  if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
+
+  // Get connection from connection pool
+  mysqlPool.getConnection(async (err, connection) => {
+    try {
+      sqlOpSupport.verifySQLConnectionError(routerInfo, err);
+
+      let inputInfo = [
+        article_id,
+        title,
+        user_id,
+        content,
+      ] = [
+        req.body.article_id,
+        req.body.title,
+        req.session.logInUser,
+        req.body.content,
+      ];
+  
+      let sendData;
+      let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      articleData = articleData[0];
+  
+      // If the given article id is not existed, reject operation
+      if (articleData === undefined) {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+        }
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
+      }
+
+      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData.author_id);
+      userData = userData[0]
+
+      // If the user is not the author of the article, reject operation
+      if (userData.uuid !== user_id) {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_NOT_AUTHORIZED,
+        }
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
+      } 
+
+      // We are going to update data partially, if the data is not given, we
+      // should use the previous data
+      if (!title) title = articleData.title;
+      if (!content) content = articleData.content;
+
+      // Operate database, update value
+      await new Promise ((resolve, reject) => {
+        connection.query(mysqlArticleOp.updateById, [title, content, article_id], (error, results, fields) => {
+          if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); reject(error); };
+          resolve(results);
+        });
+      });
+
+      // Obtain opertaion results
+      articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      articleData = articleData[0];
+      sendData = {
+        'article': {
+          'article_id': articleData.article_id,
+          'title': articleData.title,
+          'created_at': articleData.created_at,
+          'last_modified_at': articleData.last_modified_at,
+          'author': userData,
+          'content': articleData.content,
+        },
+      };
+
+      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+});
+
+router.delete('/id', multipartMiddleware, (req, res, next) => {
+  let routerInfo = [req, res, next];
+  let blockUsers = 'NOT_LOGIN';
+  if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
+
+  // Get connection from connection pool
+  mysqlPool.getConnection(async (err, connection) => {
+    try {
+      sqlOpSupport.verifySQLConnectionError(routerInfo, err);
+
+      let inputInfo = [
+        article_id,
+        user_id,
+      ] = [
+        req.body.article_id,
+        req.session.logInUser,
+      ];
+
+      let sendData = {'init': 'testhere'};
+      let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      // articleData = articleData[0];
+  
+      // If the given article id is not existed, reject operation
+      // if (articleData === undefined) {
+      //   sendData = {
+      //     'success': false,
+      //     'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+      //   }
+      //   sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      //   throw new Error(sendData.flag)
+      // }
+
+      sendData = {
+        'articleData': articleData,
+      }
+
+      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+
+    } catch (error) {
+      console.log(error);
+    }
   });
 });
 

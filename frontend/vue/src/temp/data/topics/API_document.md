@@ -255,8 +255,8 @@ Update *Partially* an exsited article under a certain logged in user.
 > ```json
 > {
 >   "article_id": "id of the article to be updated",
->   "title": "title of article",
->   "content": "content of article, in md format",
+>   "title" (Optional): "title of article",
+>   "content" (Optional): "content of article, in md format",
 > }
 > ```
 

@@ -31,40 +31,47 @@ function verifyLogin([req, res, next], blockFlag) {
   return true;
 }
 
-function sendOnSQLConnectionError([req, res, next], error) {
+function verifySQLConnectionError([req, res, next], error) {
   if (error) {
-    console.log(error);
-    res.status(500);
-    res.send({
-      'success': false,
-      'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
-      'error': error,
+    sendOnSQLConnectionError([req, res, next], error);
+
+    return new Promise((resolve, reject) => {
+      reject(error);
     });
   }
 }
 
-function getLoggedInUserData([req, res, next], mysqlPool, connection) {
-  return new Promise ((resolve, reject) => {
-    connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
+function sendOnSQLConnectionError([req, res, next], error) {
+  if (error) {
+    res.status(500);
+    res.send({
+      'success': false,
+      'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
+      'error': {
+        'code': error.code,
+        'sqlMessage': error.sqlMessage,
+      },
+    });
+  }
+}
+
+function getLoggedInUserData([req, res, next], connection) {
+  return getUserDataById([req, res, next], connection, req.session.logInUser);
+}
+
+function getUserDataById([req, res, next], connection, userId) {
+  return new Promise((resolve, reject) => {
+    connection.query(mysqlUserOp.getUserById, [userId], (error, results, fields) => {
       if (error) { sendOnSQLConnectionError([req, res, next], error); reject(error); };
       resolve(results);
     });
   })
 }
 
-function getUserDataById(req, mysqlPool, connection, userId) {
-  return new Promise ((resolve) => {
-    connection.query(mysqlUserOp.getUserById, [userId], (error, results, fields) => {
-      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
-      resolve(results);
-    });
-  })
-}
-
-function getArticleDataById(req, mysqlPool, connection, articleId) {
-  return new Promise ((resolve) => {
+function getArticleDataById([req, res, next], connection, articleId) {
+  return new Promise((resolve, reject) => {
     connection.query(mysqlArticleOp.queryById, [articleId], (error, results, fields) => {
-      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      if (error) { sendOnSQLConnectionError([req, res, next], error); reject(error); };
       resolve(results);
     });
   })
@@ -81,9 +88,13 @@ function sendAndCloseConnection(res, mysqlPool, connection, data) {
 
 module.exports = {
   verifyLogin,
+  verifySQLConnectionError,
+
   sendOnSQLConnectionError,
+
   getLoggedInUserData,
   getUserDataById,
   getArticleDataById,
+
   sendAndCloseConnection,
 };
