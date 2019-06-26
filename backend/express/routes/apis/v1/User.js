@@ -28,9 +28,17 @@ router.post('/login', multipartMiddleware, async (req, res, next) => {
     mysqlPool.getConnection((err, connection) => {
       let sqlInfo = [mysqlPool, connection];
       if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+
+      let [
+        userName,
+        userPwd,
+      ] = [
+          req.body.userName,
+          req.body.userPwd,
+      ];
   
-      connection.query(mysqlUserOp.getUserByNameWithPassword, [userName], async (error, results, fields) => {
-        await sqlOpSupport.verifySQLConnection(routerInfo, sqlInfo, error);
+      connection.query(mysqlUserOp.getUserByNameWithPassword, [userName], (error, results, fields) => {
+        if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
         
         if (results.length === 0) { // TODO: improve here!
           res.status(401);
@@ -72,7 +80,6 @@ router.post('/login', multipartMiddleware, async (req, res, next) => {
             };
           }
         }
-  
         sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
       });
     });

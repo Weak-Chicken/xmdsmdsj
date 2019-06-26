@@ -48,10 +48,10 @@ function sendAndCloseConnection(res, mysqlPool, connection, data) {
   mysqlPool.releaseConnection(connection);
 }
 
-function getLoggedInUserData(req, mysqlPool, connection) {
-  return new Promise ((resolve) => {
+function getLoggedInUserData([req, res, next], mysqlPool, connection) {
+  return new Promise ((resolve, reject) => {
     connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
-      if (!checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      if (error) { sendOnSQLConnectionError([req, res, next], error); reject(error); };
       resolve(results);
     });
   })
