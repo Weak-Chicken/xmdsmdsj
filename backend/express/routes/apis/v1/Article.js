@@ -33,49 +33,51 @@ router.post('/', multipartMiddleware, (req, res, next) => {
 
   // Get connection from connection pool
   mysqlPool.getConnection(async (err, connection) => {
-    let sqlInfo = [mysqlPool, connection];
-    if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+    try {
+      if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
 
-    let inputInfo = [
-      article_id,
-      title,
-      author_id,
-      content,
-    ] = [
-      uuidv1(),
-      req.body.title,
-      req.session.logInUser,
-      req.body.content,
-    ];
-
-    let sendData;
-    let userData;
-    // let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, mysqlPool, connection);
-    connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
-      if (error) { sendOnSQLConnectionError([req, res, next], error); return; };
-      userData = results;
-    });
-
-    connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
-      if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
-    });
-
-    // connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
-    //   if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
-    //   let createdArticle = results[0];
-    //   sendData = {
-    //     'article': {
-    //       'article_id': createdArticle.article_id,
-    //       'title': createdArticle.title,
-    //       'created_at': createdArticle.created_at,
-    //       'last_modified_at': createdArticle.last_modified_at,
-    //       'author': userData,
-    //       'content': createdArticle.content,
-    //     },
-    //   };
-
-      // sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-    // });
+      let inputInfo = [
+        article_id,
+        title,
+        author_id,
+        content,
+      ] = [
+        // uuidv1(),
+        'fixed_uuid_for_testing',
+        req.body.title,
+        req.session.logInUser,
+        req.body.content,
+      ];
+  
+      let sendData;
+      let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, mysqlPool, connection);
+  
+      await new Promise ((resolve, reject) => {
+        connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
+          if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); reject(error); };
+          resolve(results);
+        })
+      })
+  
+      connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
+        if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
+        let createdArticle = results[0];
+        sendData = {
+          'article': {
+            'article_id': createdArticle.article_id,
+            'title': createdArticle.title,
+            'created_at': createdArticle.created_at,
+            'last_modified_at': createdArticle.last_modified_at,
+            'author': userData,
+            'content': createdArticle.content,
+          },
+        };
+  
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      });
+    } catch (error) {
+      console.log(error)
+    }
   });
 });
 

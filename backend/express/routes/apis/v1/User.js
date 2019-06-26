@@ -25,7 +25,6 @@ router.post('/login', multipartMiddleware, async (req, res, next) => {
 
   // Get connection from connection pool
   mysqlPool.getConnection((err, connection) => {
-    let sqlInfo = [mysqlPool, connection];
     if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
 
     let [

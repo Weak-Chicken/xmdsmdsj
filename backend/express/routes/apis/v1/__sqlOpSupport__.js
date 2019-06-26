@@ -43,14 +43,6 @@ function sendOnSQLConnectionError([req, res, next], error) {
   }
 }
 
-function sendAndCloseConnection(res, mysqlPool, connection, data) {
-  res.send(data);
-
-  // Release the connection
-  // connection.release(); // might not work
-  mysqlPool.releaseConnection(connection);
-}
-
 function getLoggedInUserData([req, res, next], mysqlPool, connection) {
   return new Promise ((resolve, reject) => {
     connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
@@ -78,11 +70,20 @@ function getArticleDataById(req, mysqlPool, connection, articleId) {
   })
 }
 
+
+function sendAndCloseConnection(res, mysqlPool, connection, data) {
+  res.send(data);
+
+  // Release the connection
+  // connection.release(); // might not work
+  mysqlPool.releaseConnection(connection);
+}
+
 module.exports = {
   verifyLogin,
   sendOnSQLConnectionError,
-  sendAndCloseConnection,
   getLoggedInUserData,
   getUserDataById,
   getArticleDataById,
+  sendAndCloseConnection,
 };
