@@ -14,18 +14,21 @@ function verifyLogin([req, res, next], blockFlag) {
         'success': false,
         'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
       });
-      throw new Error('User Already Logged in');
+      console.log('Warning: User has already logged in');
+      return false;
     }
   } else {
     if (!(req.session.logIn)) {
-      res.status(400);
+      res.status(401);
       res.send({
         'success': false,
         'flag': flagCode.ERROR_NOT_LOGGED_IN,
       });
-      throw new Error('User Not Logged in');
+      console.log('Warning: User not logged in');
+      return false;
     }
   }
+  return true;
 }
 
 function sendOnSQLConnectionError([req, res, next], error) {

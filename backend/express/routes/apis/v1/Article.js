@@ -27,60 +27,56 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', multipartMiddleware, (req, res, next) => {
-  try {
-    let routerInfo = [req, res, next];
-    let blockUsers = 'NOT_LOGIN';
-    sqlOpSupport.verifyLogin(routerInfo, blockUsers);
-  
-    // Get connection from connection pool
-    mysqlPool.getConnection(async (err, connection) => {
-      let sqlInfo = [mysqlPool, connection, err];
-      if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+  let routerInfo = [req, res, next];
+  let blockUsers = 'NOT_LOGIN';
+  if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
-      let inputInfo = [
-        article_id,
-        title,
-        author_id,
-        content,
-      ] = [
-        'fixed_uuid_for_testing',
-        req.body.title,
-        req.session.logInUser,
-        req.body.content,
-      ];
-  
-      let sendData;
-      let userData;
-      // let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, mysqlPool, connection);
-      connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
-        if (error) { sendOnSQLConnectionError([req, res, next], error); return; };
-        userData = results;
-      });
-  
-      connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
-        if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
-      });
-  
-      // connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
-      //   if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
-      //   let createdArticle = results[0];
-      //   sendData = {
-      //     'article': {
-      //       'article_id': createdArticle.article_id,
-      //       'title': createdArticle.title,
-      //       'created_at': createdArticle.created_at,
-      //       'last_modified_at': createdArticle.last_modified_at,
-      //       'author': userData,
-      //       'content': createdArticle.content,
-      //     },
-      //   };
-  
-        // sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-      // });
+  // Get connection from connection pool
+  mysqlPool.getConnection(async (err, connection) => {
+    let sqlInfo = [mysqlPool, connection];
+    if (err) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, err); return; };
+
+    let inputInfo = [
+      article_id,
+      title,
+      author_id,
+      content,
+    ] = [
+      uuidv1(),
+      req.body.title,
+      req.session.logInUser,
+      req.body.content,
+    ];
+
+    let sendData;
+    let userData;
+    // let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, mysqlPool, connection);
+    connection.query(mysqlUserOp.getUserById, req.session.logInUser, (error, results, fields) => {
+      if (error) { sendOnSQLConnectionError([req, res, next], error); return; };
+      userData = results;
     });
-  } catch (error) {
-    console.log(error);
-  }
+
+    connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
+      if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
+    });
+
+    // connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
+    //   if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); return; };
+    //   let createdArticle = results[0];
+    //   sendData = {
+    //     'article': {
+    //       'article_id': createdArticle.article_id,
+    //       'title': createdArticle.title,
+    //       'created_at': createdArticle.created_at,
+    //       'last_modified_at': createdArticle.last_modified_at,
+    //       'author': userData,
+    //       'content': createdArticle.content,
+    //     },
+    //   };
+
+      // sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+    // });
+  });
 });
 
 router.put('/id', multipartMiddleware, (req, res, next) => {
