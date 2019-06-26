@@ -27,52 +27,59 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', multipartMiddleware, (req, res, next) => {
-  if (!sqlOpSupport.blockLogin('NOT_LOGIN', req, res, next)) return;
+  try {
+    let routerInfo = [req, res, next];
+    let blockUsers = 'NOT_LOGIN';
+    sqlOpSupport.verifyLogin(routerInfo, blockUsers);
+  
+    // Get connection from connection pool
+    mysqlPool.getConnection(async (err, connection) => {
+      let sqlInfo = [mysqlPool, connection, err];
+      sqlOpSupport.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR);
 
-  // Get connection from connection pool
-  mysqlPool.getConnection(async (err, connection) => {
-    if (!sqlOpSupport.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
-
-    let inputInfo = [
-      article_id,
-      title,
-      author_id,
-      content,
-    ] = [
-      uuidv1(),
-      req.body.title,
-      req.session.logInUser,
-      req.body.content,
-    ];
-
-    let sendData;
-    let userData = await sqlOpSupport.getLoggedInUserData(req, mysqlPool, connection);
-
-    connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
-      if (!sqlOpSupport.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      let inputInfo = [
+        article_id,
+        title,
+        author_id,
+        content,
+      ] = [
+        uuidv1(),
+        req.body.title,
+        req.session.logInUser,
+        req.body.content,
+      ];
+  
+      let sendData;
+      let userData = await sqlOpSupport.getLoggedInUserData(req, mysqlPool, connection);
+  
+      connection.query(mysqlArticleOp.insertNew, inputInfo, (error, results, fields) => {
+        if (!sqlOpSupport.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+      });
+  
+      connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
+        if (!sqlOpSupport.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
+        let createdArticle = results[0];
+        sendData = {
+          'article': {
+            'article_id': createdArticle.article_id,
+            'title': createdArticle.title,
+            'created_at': createdArticle.created_at,
+            'last_modified_at': createdArticle.last_modified_at,
+            'author': userData,
+            'content': createdArticle.content,
+          },
+        };
+  
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      });
     });
-
-    connection.query(mysqlArticleOp.queryById, article_id, (error, results, fields) => {
-      if (!sqlOpSupport.checkSQLConnection(error, mysqlPool, connection, flagCode.ERROR_UNKNOWN_USER_LOGIN_ERROR)) return;
-      let createdArticle = results[0];
-      sendData = {
-        'article': {
-          'article_id': createdArticle.article_id,
-          'title': createdArticle.title,
-          'created_at': createdArticle.created_at,
-          'last_modified_at': createdArticle.last_modified_at,
-          'author': userData,
-          'content': createdArticle.content,
-        },
-      };
-
-      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-    });
-  });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.put('/id', multipartMiddleware, (req, res, next) => {
-  if (!sqlOpSupport.blockLogin('NOT_LOGIN', req, res, next)) return;
+  if (!sqlOpSupport.verifyLogin('NOT_LOGIN', req, res, next)) return;
 
   // Get connection from connection pool
   mysqlPool.getConnection(async (err, connection) => {

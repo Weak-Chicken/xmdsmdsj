@@ -4,7 +4,7 @@ const flagCode = flags.flags();
 const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const mysqlArticleOp = require('../../../db/sql/articleSqlOp');
 
-function blockLogin(blockFlag, req, res, next) {
+function verifyLogin([req, res, next], blockFlag) {
   let checkMode = (blockFlag.toUpperCase() === 'LOGIN') ? true : false;
 
   if (checkMode) {
@@ -14,7 +14,7 @@ function blockLogin(blockFlag, req, res, next) {
         'success': false,
         'flag': flagCode.ERROR_ALREADY_LOGGED_IN,
       });
-      return false;
+      throw new Error('User Already Logged in');
     }
   } else {
     if (!(req.session.logIn)) {
@@ -23,26 +23,20 @@ function blockLogin(blockFlag, req, res, next) {
         'success': false,
         'flag': flagCode.ERROR_NOT_LOGGED_IN,
       });
-      return false;
+      throw new Error('User Not Logged in');
     }
   }
-
-  return true;
 }
 
-function checkSQLConnection(error, mysqlPool, connection, flag) {
+function sendOnSQLConnectionError([req, res, next], error) {
   if (error) {
     console.log(error);
     res.status(500);
     res.send({
       'success': false,
-      'flag': flag,
+      'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
       'error': error,
     });
-    mysqlPool.releaseConnection(connection);
-    return false;
-  } else {
-    return true;
   }
 }
 
@@ -82,8 +76,8 @@ function getArticleDataById(req, mysqlPool, connection, articleId) {
 }
 
 module.exports = {
-  blockLogin,
-  checkSQLConnection,
+  verifyLogin,
+  sendOnSQLConnectionError,
   sendAndCloseConnection,
   getLoggedInUserData,
   getUserDataById,
