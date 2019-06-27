@@ -19,16 +19,15 @@ const flagCode = flags.flags();
 const uuidv1 = require('uuid/v1');
 
 router.get('/', (req, res, next) => {
-  // Get connection from connection pool
-  mysqlPool.getConnection((err, connection) => {
-    if (!sqlOpSupport.checkSQLConnection(err, mysqlPool, connection, flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR)) return;
+  let sendData, sendStatus;
 
-  });
+  sqlOpSupport.sendAndNotCloseConnection(res, sendData)
 });
 
 router.post('/', multipartMiddleware, (req, res, next) => {
   let routerInfo = [req, res, next];
   let blockUsers = 'NOT_LOGIN';
+  let sendData, sendStatus;
   if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
@@ -48,7 +47,6 @@ router.post('/', multipartMiddleware, (req, res, next) => {
         req.body.content,
       ];
   
-      let sendData;
       let userData = await sqlOpSupport.getLoggedInUserData(routerInfo, connection);
   
       await new Promise ((resolve, reject) => {
@@ -72,21 +70,23 @@ router.post('/', multipartMiddleware, (req, res, next) => {
           },
         };
   
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
       });
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) { sqlOpSupport.deafultErrorRespond(routerInfo, sqlInfo, sendData, error) }
   });
 });
 
 router.put('/id', multipartMiddleware, (req, res, next) => {
   let routerInfo = [req, res, next];
   let blockUsers = 'NOT_LOGIN';
+  let sendData, sendStatus;
+
   if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
   mysqlPool.getConnection(async (err, connection) => {
+    let sqlInfo = [mysqlPool, connection];
+
     try {
       sqlOpSupport.verifySQLConnectionError(routerInfo, err);
 
@@ -102,7 +102,6 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
         req.body.content,
       ];
   
-      let sendData;
       let articleData = await sqlOpSupport.sureGetArticleDataById(routerInfo, mysqlPool, connection, article_id);
 
       let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData.author_id);
@@ -114,7 +113,7 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
           'success': false,
           'flag': flagCode.ERROR_NOT_AUTHORIZED,
         }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
         throw new Error(sendData.flag)
       } 
 
@@ -140,16 +139,15 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
         },
       };
 
-      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-    } catch (error) {
-      console.log(error)
-    }
+      sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
+    } catch (error) { sqlOpSupport.deafultErrorRespond(routerInfo, sqlInfo, sendData, error) }
   });
 });
 
 router.patch('/id', multipartMiddleware, (req, res, next) => {
   let routerInfo = [req, res, next];
   let blockUsers = 'NOT_LOGIN';
+  let sendData, sendStatus;
   if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
@@ -169,7 +167,6 @@ router.patch('/id', multipartMiddleware, (req, res, next) => {
         req.body.content,
       ];
   
-      let sendData;
       let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
       articleData = articleData[0];
   
@@ -179,7 +176,7 @@ router.patch('/id', multipartMiddleware, (req, res, next) => {
           'success': false,
           'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
         }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
         throw new Error(sendData.flag)
       }
 
@@ -192,7 +189,7 @@ router.patch('/id', multipartMiddleware, (req, res, next) => {
           'success': false,
           'flag': flagCode.ERROR_NOT_AUTHORIZED,
         }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
         throw new Error(sendData.flag)
       } 
 
@@ -223,16 +220,15 @@ router.patch('/id', multipartMiddleware, (req, res, next) => {
         },
       };
 
-      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-    } catch (error) {
-      console.log(error);
-    }
+      sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
+    } catch (error) { sqlOpSupport.deafultErrorRespond(routerInfo, sqlInfo, sendData, error) }
   });
 });
 
 router.delete('/id', multipartMiddleware, (req, res, next) => {
   let routerInfo = [req, res, next];
   let blockUsers = 'NOT_LOGIN';
+  let sendData, sendStatus;
   if (!sqlOpSupport.verifyLogin(routerInfo, blockUsers)) return;
 
   // Get connection from connection pool
@@ -248,7 +244,6 @@ router.delete('/id', multipartMiddleware, (req, res, next) => {
         req.session.logInUser,
       ];
 
-      let sendData = {'init': 'testhere'};
       let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
       articleData = articleData[0];
   
@@ -258,7 +253,7 @@ router.delete('/id', multipartMiddleware, (req, res, next) => {
           'success': false,
           'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
         }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
         throw new Error(sendData.flag)
       }
 
@@ -278,19 +273,17 @@ router.delete('/id', multipartMiddleware, (req, res, next) => {
         sendData = {
           'success': true,
         }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
       } else {
         sendData = {
           'success': false,
           'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
         }
   
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        sqlOpSupport.sendAndCloseConnection(res, sqlInfo, sendData);
         throw new Error(sendData.flag)
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) { sqlOpSupport.deafultErrorRespond(routerInfo, sqlInfo, sendData, error) }
   });
 });
 

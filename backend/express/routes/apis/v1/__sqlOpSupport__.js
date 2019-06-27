@@ -4,12 +4,29 @@ const flagCode = flags.flags();
 const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const mysqlArticleOp = require('../../../db/sql/articleSqlOp');
 
-function sendAndCloseConnection(res, mysqlPool, connection, data) {
+function sendAndCloseConnection(res, [mysqlPool, connection], data) {
   res.send(data);
 
   // Release the connection
   // connection.release(); // might not work
   mysqlPool.releaseConnection(connection);
+}
+
+function sendAndNotCloseConnection(res, data, status) {
+  res.status(status);
+  res.send(data);
+}
+
+function deafultErrorRespond([req, res, next], [mysqlPool, connection], sendData, error) {
+  console.log(error);
+  if (!sendData) {
+    sendData = {
+      'success': false,
+      'flag': flagCode.ERROR_UNSET_SERVER_INTERNAL_WRONG,
+      'error': error,
+    }
+  }
+  sendAndNotCloseConnection(res, sendData);
 }
 
 function verifyLogin([req, res, next], blockFlag) {
@@ -49,17 +66,17 @@ function verifySQLConnectionError([req, res, next], error) {
   }
 }
 
-function sendOnSQLConnectionError([req, res, next], error) {
+function sendOnSQLConnectionError(sendData, sendStatus, error) {
   if (error) {
-    res.status(500);
-    res.send({
+    sendStatus = 500;
+    sendData = {
       'success': false,
       'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
       'error': {
         'code': error.code,
         'sqlMessage': error.sqlMessage,
       },
-    });
+    };
   }
 }
 
@@ -112,6 +129,8 @@ async function sureGetArticleDataById([req, res, next], mysqlPool, connection, a
 
 module.exports = {
   sendAndCloseConnection,
+  sendAndNotCloseConnection,
+  deafultErrorRespond,
 
   verifyLogin,
   verifySQLConnectionError,
