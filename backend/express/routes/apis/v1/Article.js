@@ -103,20 +103,12 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
       ];
   
       let sendData;
-      let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
-      articleData = articleData[0];
-  
-      // If the given article id is not existed, reject operation
-      if (articleData === undefined) {
-        sendData = {
-          'success': false,
-          'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
-        }
-        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-        throw new Error(sendData.flag)
-      }
+      let articleData = await sqlOpSupport.sureGetArticleDataById(routerInfo, mysqlPool, connection, article_id);
+      console.log(articleData);
 
-      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData.author_id);
+      
+
+      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData[0].author_id);
       userData = userData[0]
 
       // If the user is not the author of the article, reject operation

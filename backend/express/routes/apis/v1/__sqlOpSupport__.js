@@ -4,6 +4,14 @@ const flagCode = flags.flags();
 const mysqlUserOp = require('../../../db/sql/userSqlOp');
 const mysqlArticleOp = require('../../../db/sql/articleSqlOp');
 
+function sendAndCloseConnection(res, mysqlPool, connection, data) {
+  res.send(data);
+
+  // Release the connection
+  // connection.release(); // might not work
+  mysqlPool.releaseConnection(connection);
+}
+
 function verifyLogin([req, res, next], blockFlag) {
   let checkMode = (blockFlag.toUpperCase() === 'LOGIN') ? true : false;
 
@@ -68,25 +76,43 @@ function getUserDataById([req, res, next], connection, userId) {
   })
 }
 
-function getArticleDataById([req, res, next], connection, articleId) {
+function getArticlesDataById([req, res, next], connection, articleIds) {
   return new Promise((resolve, reject) => {
-    connection.query(mysqlArticleOp.queryById, [articleId], (error, results, fields) => {
+    connection.query(mysqlArticleOp.queryById, articleIds, (error, results, fields) => {
       if (error) { sendOnSQLConnectionError([req, res, next], error); reject(error); };
       resolve(results);
     });
   })
 }
 
+function getArticleDataById([req, res, next], connection, articleId) {
+  return getArticlesDataById([req, res, next], connection, [articleId]);
+}
 
-function sendAndCloseConnection(res, mysqlPool, connection, data) {
-  res.send(data);
+async function sureGetArticlesDataById([req, res, next], mysqlPool, connection, articleIds){
+  let articlesData = await getArticlesDataById([req, res, next], connection, articleIds);
 
-  // Release the connection
-  // connection.release(); // might not work
-  mysqlPool.releaseConnection(connection);
+  // If the given article id is not existed, reject operation
+  if (articlesData.length === 0) {
+    let sendData = {
+      'success': false,
+      'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+    }
+    sendAndCloseConnection(res, mysqlPool, connection, sendData);
+    throw new Error(sendData.flag)
+  } else {
+    return articlesData;
+  }
+}
+
+function sureGetArticleDataById([req, res, next], mysqlPool, connection, articleId){
+  let articlesData = sureGetArticlesDataById([req, res, next], mysqlPool, connection, [articleId]);
+  return articlesData;
 }
 
 module.exports = {
+  sendAndCloseConnection,
+
   verifyLogin,
   verifySQLConnectionError,
 
@@ -94,7 +120,9 @@ module.exports = {
 
   getLoggedInUserData,
   getUserDataById,
+  getArticlesDataById,
   getArticleDataById,
 
-  sendAndCloseConnection,
+  sureGetArticlesDataById,
+  sureGetArticleDataById,
 };
