@@ -297,6 +297,6 @@ Delete an exsited article under a certain logged in user.
 > ```json
 > {
 >   "success": true or false,
->   "flag": flag,
+>   "flag" (Optional): flag,
 > }
 > ```

@@ -261,24 +261,44 @@ router.delete('/id', multipartMiddleware, (req, res, next) => {
 
       let sendData = {'init': 'testhere'};
       let articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
-      // articleData = articleData[0];
+      articleData = articleData[0];
   
       // If the given article id is not existed, reject operation
-      // if (articleData === undefined) {
-      //   sendData = {
-      //     'success': false,
-      //     'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
-      //   }
-      //   sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
-      //   throw new Error(sendData.flag)
-      // }
-
-      sendData = {
-        'articleData': articleData,
+      if (articleData === undefined) {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_ARTICLE_NOT_FOUND,
+        }
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
       }
 
-      sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      // Delete the article in database
+      await new Promise ((resolve, reject) => {
+        connection.query(mysqlArticleOp.deleteById, [article_id], (error, results, fields) => {
+          if (error) { sqlOpSupport.sendOnSQLConnectionError(routerInfo, error); reject(error); };
+          resolve(results);
+        });
+      });
 
+      // Verify the operation
+      articleData = await sqlOpSupport.getArticleDataById(routerInfo, connection, article_id);
+      articleData = articleData[0];
+
+      if (articleData === undefined) {
+        sendData = {
+          'success': true,
+        }
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+      } else {
+        sendData = {
+          'success': false,
+          'flag': flagCode.ERROR_UNKNOWN_SQL_CONNECTION_ERROR,
+        }
+  
+        sqlOpSupport.sendAndCloseConnection(res, mysqlPool, connection, sendData);
+        throw new Error(sendData.flag)
+      }
     } catch (error) {
       console.log(error);
     }
