@@ -105,9 +105,9 @@ async function sureGetArticlesDataById([req, res, next], mysqlPool, connection, 
   }
 }
 
-function sureGetArticleDataById([req, res, next], mysqlPool, connection, articleId){
-  let articlesData = sureGetArticlesDataById([req, res, next], mysqlPool, connection, [articleId]);
-  return articlesData;
+async function sureGetArticleDataById([req, res, next], mysqlPool, connection, articleId){
+  let articleData = await sureGetArticlesDataById([req, res, next], mysqlPool, connection, [articleId]);
+  return articleData[0];
 }
 
 module.exports = {

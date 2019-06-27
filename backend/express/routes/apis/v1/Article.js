@@ -104,11 +104,8 @@ router.put('/id', multipartMiddleware, (req, res, next) => {
   
       let sendData;
       let articleData = await sqlOpSupport.sureGetArticleDataById(routerInfo, mysqlPool, connection, article_id);
-      console.log(articleData);
 
-      
-
-      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData[0].author_id);
+      let userData = await sqlOpSupport.getUserDataById([req, res, next], connection, articleData.author_id);
       userData = userData[0]
 
       // If the user is not the author of the article, reject operation
