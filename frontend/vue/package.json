@@ -14,7 +14,7 @@
     "highlight.js": "^9.15.8",
     "html-loader": "^0.5.5",
     "markdown-loader": "^5.0.0",
-    "mavon-editor": "^2.7.5",
+    "mavon-editor": "^2.8.2",
     "showdown": "^1.9.0",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
